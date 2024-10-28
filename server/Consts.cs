@@ -2,6 +2,6 @@ using System.Drawing;
 
 namespace GameInv {
     public static class Consts {
-        TicksPerSecond = 20;
+        const int TicksPerSecond = 20;
     }
 }

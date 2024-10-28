@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="NLog.Extensions.Logging" Version="5.3.14" />
       <PackageReference Include="Pastel" Version="5.1.0" />
     </ItemGroup>
 
