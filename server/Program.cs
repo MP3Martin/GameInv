@@ -4,6 +4,7 @@
             new GameInv(
                 new Inventory()
             ).Run();
+
         }
     }
 }
