@@ -1,5 +1,3 @@
-using System.Collections;
-
-namespace GameInv { 
-    public interface IInventory : IEnumerable<Item>;
+namespace GameInv.Inventory { 
+    public interface IInventory : IEnumerable<Item.Item>;
 }

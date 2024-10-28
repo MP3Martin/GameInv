@@ -1,10 +1,10 @@
 using System.Collections;
 
-namespace GameInv {
+namespace GameInv.Inventory {
     public class Inventory : IInventory {
-        private readonly List<Item> _items = [];
+        private readonly List<Item.Item> _items = [];
 
-        public IEnumerator<Item> GetEnumerator() => _items.GetEnumerator();
+        public IEnumerator<Item.Item> GetEnumerator() => _items.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() {
             return GetEnumerator();

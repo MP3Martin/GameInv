@@ -12,4 +12,11 @@
       <PackageReference Include="Pastel" Version="5.1.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="NLog.config" />
+      <EmbeddedResource Include="NLog.config">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
+
 </Project>

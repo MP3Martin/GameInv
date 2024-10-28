@@ -1,13 +1,14 @@
+using GameInv.Inventory;
 using NLog;
 
 namespace GameInv {
     public class GameInv(IInventory inventory) {
-        private static Logger _logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private IInventory _inventory = inventory;
 
         public void Run() {
-            _logger.Info("Started");
+            Logger.Info("Started");
         }
 
         public void Tick() {
