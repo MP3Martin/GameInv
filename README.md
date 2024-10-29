@@ -8,4 +8,4 @@
 - [ ] button to use the item
 - [ ] maybe item emoji icon with a picker
 - [ ] remove this, write docs
-- [ ] Commitcleaner
+- [ ] Commit cleaner
