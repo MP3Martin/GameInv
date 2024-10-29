@@ -5,9 +5,8 @@ using Pastel;
 namespace GameInv {
     public class GameInv(IInventory inventory, IConnectionHandler connectionHandler) {
         private static readonly Logger Log = GetLogger();
-        private IInventory _inventory = inventory;
 
-        public void Run() {
+        public void Start() {
             Console.CancelKeyPress += (_, cea) => {
                 cea.Cancel = true;
                 Log.Info("Stopping...");
@@ -18,11 +17,12 @@ namespace GameInv {
 
             Log.Info("Instance created");
 
+            connectionHandler.GameInv = this;
             Log.Info($"Starting connection handler ({connectionHandler.GetType().Name.Pastel(Highlight)})");
             connectionHandler.Start();
         }
 
-        public void Stop() {
+        private void Stop() {
             connectionHandler.Stop();
         }
     }

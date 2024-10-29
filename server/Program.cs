@@ -39,10 +39,10 @@ namespace GameInv {
 
             var gameInv = new GameInv(
                 new Inventory(),
-                new WsHandler()
+                new SignalRConnectionHandler()
             );
 
-            gameInv.Run();
+            gameInv.Start();
         }
     }
 }

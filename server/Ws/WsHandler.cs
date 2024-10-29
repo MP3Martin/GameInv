@@ -1,21 +1,33 @@
-using WebSocketSharp.Server;
-
 namespace GameInv.Ws {
-    public class WsHandler : IConnectionHandler {
+    /// <inheritdoc />
+    public class SignalRConnectionHandler : IConnectionHandler {
         private static readonly Logger Log = GetLogger();
         private readonly AutoResetEvent _sleepUntilStopped = new(false);
-        private WebSocketServer _wssv = null!;
+
+        private GameInv _gameInv = null!;
         public void Start() {
-            _wssv = new(9081);
-            _wssv.Start();
-            Log.Info("Websocket server started");
-            _sleepUntilStopped.WaitOne();
+            if (_gameInv == null!) {
+                throw new InvalidOperationException("GameInv not set");
+            }
+            
+            // *start the sever*
+            Log.Info("SignalR server started");
+            _sleepUntilStopped.WaitOne(); // remove this if the SignalR server is blocking by itself
         }
 
         public void Stop() {
-            _wssv.Stop();
+            // *stop the sever*
             _sleepUntilStopped.Set();
-            Log.Info("Websocket server stopped");
+            Log.Info("SignalR server stopped");
+        }
+        public GameInv GameInv {
+            set {
+                if (_gameInv == null!) {
+                    _gameInv = value;
+                } else {
+                    throw new InvalidOperationException("GameInv already set");
+                }
+            }
         }
     }
 }
