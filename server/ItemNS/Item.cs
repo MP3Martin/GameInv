@@ -19,7 +19,7 @@ namespace GameInv.ItemNS {
         public bool Decays => _damagePerTick is not null;
 
         /// <summary>
-        /// Use the item and return the updated item or null if broken.
+        ///     Use the item and return the updated item or null if broken.
         /// </summary>
         public Item? Use() {
             if (!Usable) throw new InvalidOperationException("Item is not usable");
@@ -27,18 +27,17 @@ namespace GameInv.ItemNS {
         }
 
         /// <summary>
-        /// Tick the item durability and return the updated item or null if broken.
+        ///     Tick the item durability and return the updated item or null if broken.
         /// </summary>
-        public Item? TickDurability() {
+        public Item? TickDurability(int ticks) {
             if (!Decays) throw new InvalidOperationException("Item does not decay");
-            return ApplyDurabilityChange(_damagePerTick!.Value);
+            return ApplyDurabilityChange((ItemDurability)(_damagePerTick!.Value * ticks));
         }
 
         /// <summary>
-        /// Apply the specified durability change and return a new item or null if broken.
+        ///     Apply the specified durability change and return a new item or null if broken.
         /// </summary>
         private Item? ApplyDurabilityChange(ItemDurability damage) {
-
             var newDurability = _durability - damage;
             if (newDurability <= ItemDurability.MinValue) {
                 return null;
@@ -48,5 +47,7 @@ namespace GameInv.ItemNS {
             newItem._durability = new((ushort)newDurability!);
             return newItem;
         }
+
+        public readonly string Id = Guid.NewGuid().ToString();
     }
 }

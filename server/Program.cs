@@ -1,11 +1,11 @@
 ﻿global using Sherlog;
 global using static System.Drawing.Color;
-global using static GameInv.Utils;
-global using static GameInv.Consts;
+global using static GameInv.Utils.Consts;
+global using static GameInv.Utils.Utils;
+using static GameInv.Utils.Consts.Colors;
 using System.Drawing;
 using GameInv.InventoryNS;
 using Pastel;
-using static GameInv.Consts.Colors;
 
 namespace GameInv {
     public static class Program {
@@ -22,7 +22,7 @@ namespace GameInv {
 
             Logger.AddAppender((logger, level, message) => {
                 message = "[".Pastel(MiscChar) +
-                    DateTime.UtcNow.ToString("yyyy-MM-dd").Pastel(LessImportantText) +
+                    DateTime.UtcNow.ToString(LogTimeFormat).Pastel(LessImportantText) +
                     " " +
                     level.ToString().Pastel(logLevelColorMap[level]) +
                     " (".Pastel(MiscChar) +

@@ -1,4 +1,5 @@
 using GameInv.InventoryNS;
+using WebSocketSharp.Server;
 
 namespace GameInv {
     public class GameInv(IInventory inventory) {
@@ -7,6 +8,8 @@ namespace GameInv {
 
         public void Run() {
             Log.Info("Instance created");
+            
+            var wssv = new WebSocketServer (4649);
         }
 
         public void Tick() {

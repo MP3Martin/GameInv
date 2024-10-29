@@ -1,7 +1,6 @@
 using System.Diagnostics;
-using System.Reflection;
 
-namespace GameInv {
+namespace GameInv.Utils {
     public static class Utils {
         /// <summary>
         ///     Do not use this outside of a class constructor <br />

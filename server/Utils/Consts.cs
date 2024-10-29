@@ -1,8 +1,9 @@
 using System.Drawing;
 
-namespace GameInv {
+namespace GameInv.Utils {
     public static class Consts {
-        private const int TicksPerSecond = 20;
+        public const int TicksPerSecond = 20;
+        public const string LogTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
         public static class Colors {
             public static readonly Color Highlight = DeepSkyBlue;
