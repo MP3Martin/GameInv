@@ -43,19 +43,19 @@ namespace GameInv.Ws {
         private static void HandleMessage(string message, IWebSocketConnection socket) {
             var messageParts = message.Split('|');
             string commandType;
-            string commandUuid;
+            string messageUuid;
             string commandData;
             try {
                 commandType = messageParts[0];
-                commandUuid = messageParts[1];
+                messageUuid = messageParts[1];
                 commandData = messageParts[2];
             } catch (IndexOutOfRangeException) { return; }
-
+            // TODO: base64 decode the message
 
             switch (commandType) {
                 case "RemoveItem":
                 {
-                    socket.Send("pong");
+                    socket.Send("pong"); // reply with same uuid with success
                     break;
                 }
             }
