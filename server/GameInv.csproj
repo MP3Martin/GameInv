@@ -9,9 +9,6 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.10" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
         <PackageReference Include="Pastel" Version="5.2.1" />
         <PackageReference Include="Sherlog" Version="1.0.0" />
         <PackageReference Include="Sherlog.Appenders" Version="1.0.3" />
