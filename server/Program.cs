@@ -5,6 +5,7 @@ global using static GameInv.UtilsNS.Utils;
 using static GameInv.UtilsNS.Consts.Colors;
 using System.Drawing;
 using GameInv.InventoryNS;
+using GameInv.Ws;
 using Pastel;
 
 namespace GameInv {
@@ -37,7 +38,8 @@ namespace GameInv {
             Log.Info($"Creating a new instance of {nameof(GameInv).Pastel(Highlight)}...");
 
             var gameInv = new GameInv(
-                new Inventory()
+                new Inventory(),
+                new WsHandler()
             );
 
             gameInv.Run();

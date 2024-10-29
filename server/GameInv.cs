@@ -1,20 +1,20 @@
 using GameInv.InventoryNS;
+using GameInv.Ws;
 using WebSocketSharp.Server;
 
 namespace GameInv {
-    public class GameInv(IInventory inventory) {
+    public class GameInv(IInventory inventory, IConnectionHandler connectionHandler) {
         private static readonly Logger Log = GetLogger();
         private IInventory _inventory = inventory;
-        private WsConnection _wsConnection = new();
 
         public void Run() {
             Log.Info("Instance created");
             
-            _wsConnection.Start();
+            connectionHandler.Start();
         }
 
         public void Stop() {
-            _wsConnection.Stop();
+            connectionHandler.Stop();
         }
     }
 }
