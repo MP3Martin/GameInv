@@ -1,4 +1,4 @@
-namespace GameInv.Item {
+namespace GameInv.ItemNS {
     public struct ItemDurability(ushort durability) {
         private ushort _durability = durability;
 

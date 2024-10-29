@@ -8,15 +8,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="NLog.Extensions.Logging" Version="5.3.14" />
-      <PackageReference Include="Pastel" Version="5.1.0" />
+        <PackageReference Include="Pastel" Version="5.2.1" />
+        <PackageReference Include="Sherlog" Version="1.0.0"/>
+        <PackageReference Include="Sherlog.Appenders" Version="1.0.3"/>
+        <PackageReference Include="Sherlog.Formatters" Version="2.0.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="NLog.config" />
-      <EmbeddedResource Include="NLog.config">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </EmbeddedResource>
+        <None Remove="NLog.config"/>
     </ItemGroup>
 
 </Project>

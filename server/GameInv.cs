@@ -1,14 +1,12 @@
-using GameInv.Inventory;
-using NLog;
+using GameInv.InventoryNS;
 
 namespace GameInv {
     public class GameInv(IInventory inventory) {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
+        private static readonly Logger Log = GetLogger();
         private IInventory _inventory = inventory;
 
         public void Run() {
-            Logger.Info("Started");
+            Log.Info("Instance created");
         }
 
         public void Tick() {
