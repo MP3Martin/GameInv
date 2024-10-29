@@ -1,8 +1,8 @@
 ﻿global using Sherlog;
 global using static System.Drawing.Color;
-global using static GameInv.Utils.Consts;
-global using static GameInv.Utils.Utils;
-using static GameInv.Utils.Consts.Colors;
+global using static GameInv.UtilsNS.Consts;
+global using static GameInv.UtilsNS.Utils;
+using static GameInv.UtilsNS.Consts.Colors;
 using System.Drawing;
 using GameInv.InventoryNS;
 using Pastel;
@@ -35,11 +35,16 @@ namespace GameInv {
             });
 
             Log.Info($"Creating a new instance of {nameof(GameInv).Pastel(Highlight)}...");
-            new GameInv(
-                new Inventory()
-            ).Run();
 
-            Thread.Sleep(-1);
+            var gameInv = new GameInv(
+                new Inventory()
+            );
+
+            gameInv.Run();
+
+            Console.CancelKeyPress += (_, _) => {
+                gameInv.Stop();
+            };
         }
     }
 }

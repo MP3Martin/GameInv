@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace GameInv.Utils {
+namespace GameInv.UtilsNS {
     public static class Utils {
         /// <summary>
         ///     Do not use this outside of a class constructor <br />

@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace GameInv.Utils {
+namespace GameInv.UtilsNS {
     public static class Consts {
         public const int TicksPerSecond = 20;
         public const string LogTimeFormat = "yyyy-MM-dd HH:mm:ss";

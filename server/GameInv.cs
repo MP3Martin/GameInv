@@ -5,15 +5,16 @@ namespace GameInv {
     public class GameInv(IInventory inventory) {
         private static readonly Logger Log = GetLogger();
         private IInventory _inventory = inventory;
+        private WsConnection _wsConnection = new();
 
         public void Run() {
             Log.Info("Instance created");
             
-            var wssv = new WebSocketServer (4649);
+            _wsConnection.Start();
         }
 
-        public void Tick() {
-            // TODO: break items over time, remove if durability is <= 0
+        public void Stop() {
+            _wsConnection.Stop();
         }
     }
 }
