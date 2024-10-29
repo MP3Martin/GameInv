@@ -6,7 +6,7 @@ namespace GameInv.ItemNS {
             // Durability
             _damagePerTick = damagePerTick;
             _damagePerUse = damagePerUse;
-            if (damagePerTick is not null || damagePerUse is not null) {
+            if (Usable || Decays) {
                 _durability = new ItemDurability();
             }
         }
@@ -18,33 +18,28 @@ namespace GameInv.ItemNS {
         public bool Usable => _damagePerUse is not null;
         public bool Decays => _damagePerTick is not null;
 
-        /// <returns>
-        /// <ul>
-        ///     <li>The item</li>
-        ///     <li>Null if the item was fully broken</li>
-        /// </ul>
-        /// </returns>
+        /// <summary>
+        /// Use the item and return the updated item or null if broken.
+        /// </summary>
         public Item? Use() {
             if (!Usable) throw new InvalidOperationException("Item is not usable");
-            var newDurability = _durability - _damagePerUse;
-            if (newDurability <= ItemDurability.MinValue) {
-                return null;
-            }
-
-            var newItem = this;
-            newItem._durability = new((ushort)newDurability!);
-            return newItem;
+            return ApplyDurabilityChange(_damagePerUse!.Value);
         }
 
-        /// <returns>
-        /// <ul>
-        ///     <li>The item</li>
-        ///     <li>Null if the item was fully broken</li>
-        /// </ul>
-        /// </returns>
+        /// <summary>
+        /// Tick the item durability and return the updated item or null if broken.
+        /// </summary>
         public Item? TickDurability() {
             if (!Decays) throw new InvalidOperationException("Item does not decay");
-            var newDurability = _durability - _damagePerTick;
+            return ApplyDurabilityChange(_damagePerTick!.Value);
+        }
+
+        /// <summary>
+        /// Apply the specified durability change and return a new item or null if broken.
+        /// </summary>
+        private Item? ApplyDurabilityChange(ItemDurability damage) {
+
+            var newDurability = _durability - damage;
             if (newDurability <= ItemDurability.MinValue) {
                 return null;
             }
