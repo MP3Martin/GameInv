@@ -2,8 +2,8 @@
 global using static System.Drawing.Color;
 global using static GameInv.Utils;
 global using static GameInv.Consts;
-using GameInv.InventoryNS;
 using System.Drawing;
+using GameInv.InventoryNS;
 using Pastel;
 using static GameInv.Consts.Colors;
 

@@ -1,8 +1,10 @@
 namespace GameInv.ItemNS {
-    public class Item(string name) {
-        public ItemDurability DamagePerTick;
-        public ItemDurability DamagePerUse;
-        public ItemDurability Durability = new();
+    public struct Item(string name) {
+        public readonly ItemDurability DamagePerTick;
+        public readonly ItemDurability DamagePerUse;
+        public readonly ItemDurability Durability = new();
         public string Name = name;
+        
+        // todo: only store durability if needed (also store a bool), make them nullable and only define in the contructor if bool is true
     }
 }

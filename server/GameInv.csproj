@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Pastel" Version="5.2.1" />
+        <PackageReference Include="Pastel" Version="5.2.1"/>
         <PackageReference Include="Sherlog" Version="1.0.0"/>
         <PackageReference Include="Sherlog.Appenders" Version="1.0.3"/>
         <PackageReference Include="Sherlog.Formatters" Version="2.0.0"/>
