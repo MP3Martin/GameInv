@@ -22,7 +22,7 @@ namespace GameInv {
 
             Logger.AddAppender((logger, level, message) => {
                 message = "[".Pastel(MiscChar) +
-                    DateTime.UtcNow.ToString(LogTimeFormat).Pastel(LessImportantText) +
+                    DateTime.Now.ToString(LogTimeFormat).Pastel(LessImportantText) +
                     " " +
                     level.ToString().Pastel(logLevelColorMap[level]) +
                     " (".Pastel(MiscChar) +
