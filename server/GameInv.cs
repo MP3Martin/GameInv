@@ -1,6 +1,6 @@
 using GameInv.InventoryNS;
 using GameInv.Ws;
-using WebSocketSharp.Server;
+using Pastel;
 
 namespace GameInv {
     public class GameInv(IInventory inventory, IConnectionHandler connectionHandler) {
@@ -8,8 +8,17 @@ namespace GameInv {
         private IInventory _inventory = inventory;
 
         public void Run() {
+            Console.CancelKeyPress += (_, cea) => {
+                cea.Cancel = true;
+                Log.Info("Stopping...");
+                Stop();
+                Log.Info("Bye.");
+                Environment.Exit(0);
+            };
+
             Log.Info("Instance created");
-            
+
+            Log.Info($"Starting connection handler ({connectionHandler.GetType().Name.Pastel(Highlight)})");
             connectionHandler.Start();
         }
 
