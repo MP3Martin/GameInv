@@ -5,6 +5,7 @@ namespace GameInv.UtilsNS {
         public const int TicksPerSecond = 20;
         public const string LogTimeFormat = "yyyy-MM-dd HH:mm:ss";
         public const string WsUri = "ws://0.0.0.0:9081";
+        public const string WsPass = "changeme";
 
         public static class Colors {
             public static readonly Color Highlight = DeepSkyBlue;

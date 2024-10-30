@@ -22,15 +22,6 @@ namespace GameInv.Ws {
 
             return;
 
-            /*
-             *
-             * TODO
-             * TODO: send cars when the client joins, call itemschanged in Inventory.cs, send all cars to all clients
-             * TODO: (subscribe to event in gameInv.inventory)
-             * TODO
-             *
-             */
-
             void Success(bool success, string? infoMessage = null) {
                 socket.Send(EncodeMessage((string)"confirm", messageUuid, new SuccessData {
                         Success = success, Message = infoMessage
@@ -61,8 +52,7 @@ namespace GameInv.Ws {
             void HandleRemoveItem() {
                 // ReSharper disable once InlineTemporaryVariable
                 var itemId = commandData;
-                gameInv.Inventory.RemoveItem(itemId);
-                socket.Send(EncodeMessage((string)"Confirm", messageUuid, (string)"ok"));
+                Success(gameInv.Inventory.RemoveItem(itemId));
             }
         }
     }

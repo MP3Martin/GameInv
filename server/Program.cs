@@ -42,8 +42,11 @@ namespace GameInv {
                 new Inventory(),
                 new WsHandler()
             );
-
-            gameInv.Start();
+            try {
+                gameInv.Start();
+            } catch (Exception e) {
+                Log.Error(e.ToString());
+            }
         }
     }
 }

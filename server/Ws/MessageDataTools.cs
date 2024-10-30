@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 
 namespace GameInv.Ws {
     public static class MessageDataTools {
+        /// <returns>Success</returns>
         public static bool DecodeMessage(string message, out string commandType, out string messageUuid, out string commandData) {
             commandType = "";
             messageUuid = "";
@@ -21,11 +22,15 @@ namespace GameInv.Ws {
 
             commandType = commandType.ToLower();
             messageUuid = messageUuid.ToLower();
-            commandData = Encoding.UTF8.GetString(Convert.FromBase64String(commandData));
+            try {
+                commandData = Encoding.UTF8.GetString(Convert.FromBase64String(commandData));
+            } catch (FormatException) { return false; }
+
             return true;
         }
 
-        public static string EncodeMessage(string commandType, string messageUuid, string commandData) {
+        public static string EncodeMessage(string commandType, string? messageUuid, string commandData) {
+            messageUuid ??= Guid.NewGuid().ToString();
             return $"{commandType.ToLower()}|{messageUuid}|{Convert.ToBase64String(Encoding.UTF8.GetBytes(commandData))}";
         }
 
