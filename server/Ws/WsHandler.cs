@@ -1,5 +1,5 @@
 using System.Collections.Concurrent;
-using System.Data;
+using System.Text;
 using Fleck;
 using LogLevel = Fleck.LogLevel;
 
@@ -7,11 +7,11 @@ namespace GameInv.Ws {
     /// <inheritdoc />
     public class WsHandler : IConnectionHandler {
         private static readonly Logger Log = GetLogger();
+        private static readonly ConcurrentDictionary<Guid, IWebSocketConnection> AllSockets = new();
         private readonly AutoResetEvent _sleepUntilStopped = new(false);
 
         private GameInv _gameInv = null!;
         private WebSocketServer _server = null!;
-        private static readonly ConcurrentDictionary<Guid, IWebSocketConnection> AllSockets = new ConcurrentDictionary<Guid, IWebSocketConnection>();
         public void Start() {
             if (_gameInv == null!) {
                 throw new InvalidOperationException("GameInv not set");
@@ -40,27 +40,6 @@ namespace GameInv.Ws {
             _sleepUntilStopped.WaitOne();
         }
 
-        private static void HandleMessage(string message, IWebSocketConnection socket) {
-            var messageParts = message.Split('|');
-            string commandType;
-            string messageUuid;
-            string commandData;
-            try {
-                commandType = messageParts[0];
-                messageUuid = messageParts[1];
-                commandData = messageParts[2];
-            } catch (IndexOutOfRangeException) { return; }
-            // TODO: base64 decode the message
-
-            switch (commandType) {
-                case "RemoveItem":
-                {
-                    socket.Send("pong"); // reply with same uuid with success
-                    break;
-                }
-            }
-        }
-
         public void Stop() {
             foreach (var socket in AllSockets.Values) {
                 socket.Close();
@@ -76,6 +55,19 @@ namespace GameInv.Ws {
                     _gameInv = value;
                 } else {
                     throw new InvalidOperationException("GameInv already set");
+                }
+            }
+        }
+
+        private static void HandleMessage(string message, IWebSocketConnection socket) {
+            if (!MessageData.Decode(message, out var commandType, out var messageUuid, out var commandData)) return;
+
+
+            switch (commandType) {
+                case "RemoveItem":
+                {
+                    socket.Send("pong"); // reply with same uuid with success
+                    break;
                 }
             }
         }
