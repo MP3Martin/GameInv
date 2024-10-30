@@ -5,6 +5,8 @@ namespace GameInv.InventoryNS {
     public class Inventory : IInventory {
         private static readonly Logger Log = GetLogger();
         private readonly List<Item> _items = [];
+        
+        public event  Action<IInventory>? ItemsChanged;
 
         public IEnumerator<Item> GetEnumerator() {
             return _items.GetEnumerator();
@@ -16,7 +18,9 @@ namespace GameInv.InventoryNS {
 
         public void AddItem(Item item) {
             _items.Add(item);
-            Log.Info("Item added");
+            
+            Log.Info($"Item \"{item.Name}\" added");
+            ItemsChanged?.Invoke(this);
         }
 
         /// <returns>True if the item was successfully removed</returns>
@@ -24,7 +28,12 @@ namespace GameInv.InventoryNS {
             var index = GetItemIndex(id);
             if (index == -1) return false;
 
+            var name = _items[index].Name;
             _items.RemoveAt(index);
+            
+            Log.Info($"Item \"{name}\" removed");
+            ItemsChanged?.Invoke(this);
+            
             return true;
         }
 
@@ -35,6 +44,10 @@ namespace GameInv.InventoryNS {
 
             _items.RemoveAt(index);
             _items.Insert(index, item);
+            
+            Log.Info($"Item \"{item.Name}\" modified");
+            ItemsChanged?.Invoke(this);
+            
             return true;
         }
 
