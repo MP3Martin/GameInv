@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
 using Fleck;
-using Newtonsoft.Json;
 using LogLevel = Fleck.LogLevel;
+using static GameInv.Ws.MessageDataTools;
 
 namespace GameInv.Ws {
     /// <inheritdoc />
@@ -12,6 +12,9 @@ namespace GameInv.Ws {
 
         private GameInv _gameInv = null!;
         private WebSocketServer _server = null!;
+        /// <remarks>
+        ///     Only call this once per instance
+        /// </remarks>
         public void Start() {
             if (_gameInv == null!) {
                 throw new InvalidOperationException("GameInv not set");
@@ -32,7 +35,7 @@ namespace GameInv.Ws {
                     }
                 };
                 socket.OnMessage = message => {
-                    HandleMessage(message, socket);
+                    MessageHandler.HandleMessage(message, socket, _gameInv);
                 };
             });
 
@@ -55,33 +58,6 @@ namespace GameInv.Ws {
                     _gameInv = value;
                 } else {
                     throw new InvalidOperationException("GameInv already set");
-                }
-            }
-        }
-
-        private void HandleMessage(string message, IWebSocketConnection socket) {
-            if (!MessageDataTools.Decode(message, out var commandType, out var messageUuid, out var commandData)) return;
-
-            void Ok(bool success, string? infoMessage = null) {
-                socket.Send(new MessageDataTools.SuccessData
-                        { Success = success, Message = infoMessage }.Serialize()
-                );
-            }
-
-            switch (commandType) {
-                case "add_item":
-                {
-                    if (MessageDataTools.ModifiedItem.Deserialize(commandData, out var itemId, out var itemAmount)) { }
-
-                    break;
-                }
-                case "remove_item":
-                {
-                    // ReSharper disable once InlineTemporaryVariable
-                    var itemId = commandData;
-                    _gameInv.Inventory.RemoveItem(itemId);
-                    socket.Send(MessageDataTools.Encode("Confirm", messageUuid, "ok"));
-                    break;
                 }
             }
         }

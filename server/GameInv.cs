@@ -3,6 +3,9 @@ using GameInv.Ws;
 using Pastel;
 
 namespace GameInv {
+    /// <summary>
+    ///     The <i>"main"</i> class
+    /// </summary>
     public class GameInv(IInventory inventory, IConnectionHandler connectionHandler) {
         private static readonly Logger Log = GetLogger();
         public readonly IInventory Inventory = inventory;

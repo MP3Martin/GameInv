@@ -1,11 +1,10 @@
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 using GameInv.ItemNS;
 using Newtonsoft.Json;
 
 namespace GameInv.Ws {
     public static class MessageDataTools {
-        public static bool Decode(string message, out string commandType, out string messageUuid, out string commandData) {
+        public static bool DecodeMessage(string message, out string commandType, out string messageUuid, out string commandData) {
             commandType = "";
             messageUuid = "";
             commandData = "";
@@ -26,7 +25,7 @@ namespace GameInv.Ws {
             return true;
         }
 
-        public static string Encode(string commandType, string messageUuid, string commandData) {
+        public static string EncodeMessage(string commandType, string messageUuid, string commandData) {
             return $"{commandType.ToLower()}|{messageUuid}|{Convert.ToBase64String(Encoding.UTF8.GetBytes(commandData))}";
         }
 
@@ -51,7 +50,7 @@ namespace GameInv.Ws {
         }
 
         /// <summary>
-        /// Received from client
+        ///     Received from client
         /// </summary>
         [JsonObject(ItemRequired = Required.Always)]
         private class ModifiedItemData {
@@ -88,7 +87,7 @@ namespace GameInv.Ws {
                 return new(data.Name, (ItemDurability?)data.DamagePerTick, (ItemDurability?)data.DamagePerUse, (ItemDurability?)data.Durability);
             }
             public static implicit operator ItemData(Item item) {
-                return new ItemData {
+                return new() {
                     DamagePerTick = item.DamagePerTick,
                     DamagePerUse = item.DamagePerUse,
                     Durability = item.Durability,
@@ -99,8 +98,8 @@ namespace GameInv.Ws {
 
         [JsonObject]
         public class SuccessData {
-            [JsonRequired] public bool Success;
             public string? Message;
+            [JsonRequired] public required bool Success;
 
             public string? Serialize() {
                 try {

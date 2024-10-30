@@ -3,6 +3,7 @@ global using static System.Drawing.Color;
 global using static GameInv.UtilsNS.Consts;
 global using static GameInv.UtilsNS.Consts.Colors;
 global using static GameInv.UtilsNS.Utils;
+global using static GameInv.Ws.MessageDataTools;
 using System.Drawing;
 using GameInv.InventoryNS;
 using GameInv.Ws;
