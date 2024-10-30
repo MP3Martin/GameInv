@@ -2,12 +2,12 @@ namespace GameInv.ItemNS {
     public class Item {
         public readonly ItemDurability? DamagePerTick;
         public readonly ItemDurability? DamagePerUse;
-
-        public readonly string Id = Guid.NewGuid().ToString();
-
+        public readonly string Id;
         public readonly string Name;
-        public Item(string name, ItemDurability? damagePerTick = null, ItemDurability? damagePerUse = null, ItemDurability? durability = null) {
+        public Item(string name, ItemDurability? damagePerTick = null, ItemDurability? damagePerUse = null, ItemDurability? durability = null,
+            string? id = null) {
             Name = name;
+            Id = id ?? Guid.NewGuid().ToString();
 
             // Durability
             DamagePerTick = damagePerTick;

@@ -31,21 +31,19 @@ namespace GameInv.Ws {
 
         public static class ModifiedItem {
             /// <returns>Success</returns>
-            public static bool Deserialize(string data, out string id, out Item? item) {
-                id = "";
+            public static bool Deserialize(string data, out Item? item) {
                 item = null;
 
                 var modifiedItemData = ModifiedItemData.Deserialize(data);
                 if (modifiedItemData is null) return false;
 
-                id = modifiedItemData.Id;
                 item = modifiedItemData.ItemData;
                 return true;
             }
 
             /// <returns>Null if unsuccessful</returns>
-            public static string? Serialize(string id, Item item) {
-                return new ModifiedItemData { Id = id, ItemData = item }.Serialize();
+            public static string? Serialize(Item item) {
+                return new ModifiedItemData { ItemData = item }.Serialize();
             }
         }
 
@@ -54,7 +52,6 @@ namespace GameInv.Ws {
         /// </summary>
         [JsonObject(ItemRequired = Required.Always)]
         private class ModifiedItemData {
-            public required string Id;
             public required ItemData ItemData;
 
             /// <returns>Null if unsuccessful</returns>
@@ -82,16 +79,18 @@ namespace GameInv.Ws {
             public int? DamagePerUse;
             public int? Durability;
             [JsonRequired] public required string Name;
+            [JsonRequired] public required string Id;
 
             public static implicit operator Item(ItemData data) {
-                return new(data.Name, (ItemDurability?)data.DamagePerTick, (ItemDurability?)data.DamagePerUse, (ItemDurability?)data.Durability);
+                return new(data.Name, (ItemDurability?)data.DamagePerTick, (ItemDurability?)data.DamagePerUse, (ItemDurability?)data.Durability, data.Id);
             }
             public static implicit operator ItemData(Item item) {
                 return new() {
                     DamagePerTick = item.DamagePerTick,
                     DamagePerUse = item.DamagePerUse,
                     Durability = item.Durability,
-                    Name = item.Name
+                    Name = item.Name,
+                    Id = item.Id
                 };
             }
         }
