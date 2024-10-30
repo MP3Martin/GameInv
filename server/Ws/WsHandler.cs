@@ -1,7 +1,6 @@
 using System.Collections.Concurrent;
 using Fleck;
 using LogLevel = Fleck.LogLevel;
-using static GameInv.Ws.MessageDataTools;
 
 namespace GameInv.Ws {
     /// <inheritdoc />
@@ -35,7 +34,11 @@ namespace GameInv.Ws {
                     }
                 };
                 socket.OnMessage = message => {
-                    MessageHandler.HandleMessage(message, socket, _gameInv);
+                    try {
+                        MessageHandler.HandleMessage(message, socket, _gameInv);
+                    } catch (Exception e) {
+                        Log.Error($"Error handling message: {e}");
+                    }
                 };
             });
 
