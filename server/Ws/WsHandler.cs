@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using Fleck;
+using Newtonsoft.Json;
 using LogLevel = Fleck.LogLevel;
 
 namespace GameInv.Ws {
@@ -19,14 +20,17 @@ namespace GameInv.Ws {
                 throw new InvalidOperationException("GameInv not set");
             }
 
-            const string uri = "ws://0.0.0.0:9081";
-            _server = new(uri);
-            FleckLog.Level = LogLevel.Error;
+            _gameInv.Inventory.ItemsChanged += SendItems;
+
+
+            _server = new(WsUri);
+            FleckLog.Level = LogLevel.Debug;
             _server.Start(socket => {
                 socket.OnOpen = () => {
-                    if (AllSockets.TryAdd(socket.ConnectionInfo.Id, socket)) {
-                        Log.Info($"Socket {socket.ConnectionInfo.Id} connected");
-                    }
+                    if (!AllSockets.TryAdd(socket.ConnectionInfo.Id, socket)) return;
+                    Log.Info($"Socket {socket.ConnectionInfo.Id} connected");
+
+                    SendItems(socket);
                 };
                 socket.OnClose = () => {
                     if (AllSockets.TryRemove(socket.ConnectionInfo.Id, out _)) {
@@ -42,11 +46,13 @@ namespace GameInv.Ws {
                 };
             });
 
-            Log.Info($"WebSocket server started on {uri}");
+            Log.Info($"WebSocket server started on {WsUri}");
             _sleepUntilStopped.WaitOne();
         }
 
         public void Stop() {
+            _gameInv.Inventory.ItemsChanged -= SendItems;
+
             foreach (var socket in AllSockets.Values) {
                 socket.Close();
             }
@@ -55,6 +61,7 @@ namespace GameInv.Ws {
             _sleepUntilStopped.Set();
             Log.Info("WebSocket server stopped");
         }
+
         public GameInv GameInv {
             set {
                 if (_gameInv == null!) {
@@ -62,6 +69,18 @@ namespace GameInv.Ws {
                 } else {
                     throw new InvalidOperationException("GameInv already set");
                 }
+            }
+        }
+
+        private void SendItems(IWebSocketConnection socket) {
+            var serializedItems = JsonConvert.SerializeObject(_gameInv.Inventory.ToList());
+            var message = EncodeMessage("items", Guid.NewGuid().ToString(), serializedItems);
+            socket.Send(message);
+        }
+
+        private void SendItems() {
+            foreach (var socket in AllSockets.Values) {
+                SendItems(socket);
             }
         }
     }

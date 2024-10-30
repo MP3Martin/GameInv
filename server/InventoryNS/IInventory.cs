@@ -8,6 +8,6 @@ namespace GameInv.InventoryNS {
 
         public bool RemoveItem(string id);
 
-        public event Action<IInventory> ItemsChanged;
+        public event Action ItemsChanged;
     }
 }

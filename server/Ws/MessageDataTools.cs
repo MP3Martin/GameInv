@@ -78,8 +78,8 @@ namespace GameInv.Ws {
             public int? DamagePerTick;
             public int? DamagePerUse;
             public int? Durability;
-            [JsonRequired] public required string Name;
             [JsonRequired] public required string Id;
+            [JsonRequired] public required string Name;
 
             public static implicit operator Item(ItemData data) {
                 return new(data.Name, (ItemDurability?)data.DamagePerTick, (ItemDurability?)data.DamagePerUse, (ItemDurability?)data.Durability, data.Id);
