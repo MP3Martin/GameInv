@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
-using System.Text;
 using Fleck;
+using Newtonsoft.Json;
 using LogLevel = Fleck.LogLevel;
 
 namespace GameInv.Ws {
@@ -59,14 +59,28 @@ namespace GameInv.Ws {
             }
         }
 
-        private static void HandleMessage(string message, IWebSocketConnection socket) {
-            if (!MessageData.Decode(message, out var commandType, out var messageUuid, out var commandData)) return;
+        private void HandleMessage(string message, IWebSocketConnection socket) {
+            if (!MessageDataTools.Decode(message, out var commandType, out var messageUuid, out var commandData)) return;
 
+            void Ok(bool success, string? infoMessage = null) {
+                socket.Send(new MessageDataTools.SuccessData
+                        { Success = success, Message = infoMessage }.Serialize()
+                );
+            }
 
             switch (commandType) {
-                case "RemoveItem":
+                case "add_item":
                 {
-                    socket.Send("pong"); // reply with same uuid with success
+                    if (MessageDataTools.ModifiedItem.Deserialize(commandData, out var itemId, out var itemAmount)) { }
+
+                    break;
+                }
+                case "remove_item":
+                {
+                    // ReSharper disable once InlineTemporaryVariable
+                    var itemId = commandData;
+                    _gameInv.Inventory.RemoveItem(itemId);
+                    socket.Send(MessageDataTools.Encode("Confirm", messageUuid, "ok"));
                     break;
                 }
             }

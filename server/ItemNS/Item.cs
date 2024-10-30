@@ -1,29 +1,31 @@
 namespace GameInv.ItemNS {
-    public struct Item {
-        public Item(string name, ItemDurability? damagePerTick = null, ItemDurability? damagePerUse = null) {
+    public class Item {
+        public readonly ItemDurability? DamagePerTick;
+        public  readonly ItemDurability? DamagePerUse;
+
+        public readonly string Id = Guid.NewGuid().ToString();
+
+        public readonly string Name;
+        public  ItemDurability? Durability { get; private set;  }
+        public Item(string name, ItemDurability? damagePerTick = null, ItemDurability? damagePerUse = null, ItemDurability? durability = null) {
             Name = name;
 
             // Durability
-            _damagePerTick = damagePerTick;
-            _damagePerUse = damagePerUse;
-            if (Usable || Decays) {
-                _durability = new ItemDurability();
+            DamagePerTick = damagePerTick;
+            DamagePerUse = damagePerUse;
+            if ((Usable || Decays) && durability is null) {
+                Durability = new ItemDurability();
             }
         }
-
-        public readonly string Name;
-        private readonly ItemDurability? _damagePerTick;
-        private readonly ItemDurability? _damagePerUse;
-        private ItemDurability? _durability;
-        public bool Usable => _damagePerUse is not null;
-        public bool Decays => _damagePerTick is not null;
+        public bool Usable => DamagePerUse is not null;
+        public bool Decays => DamagePerTick is not null;
 
         /// <summary>
         ///     Use the item and return the updated item or null if broken.
         /// </summary>
         public Item? Use() {
             if (!Usable) throw new InvalidOperationException("Item is not usable");
-            return ApplyDurabilityChange(_damagePerUse!.Value);
+            return ApplyDurabilityChange(DamagePerUse!.Value);
         }
 
         /// <summary>
@@ -31,23 +33,21 @@ namespace GameInv.ItemNS {
         /// </summary>
         public Item? TickDurability(int ticks) {
             if (!Decays) throw new InvalidOperationException("Item does not decay");
-            return ApplyDurabilityChange((ItemDurability)(_damagePerTick!.Value * ticks));
+            return ApplyDurabilityChange((ItemDurability)(DamagePerTick!.Value * ticks));
         }
 
         /// <summary>
         ///     Apply the specified durability change and return a new item or null if broken.
         /// </summary>
         private Item? ApplyDurabilityChange(ItemDurability damage) {
-            var newDurability = _durability - damage;
+            var newDurability = Durability - damage;
             if (newDurability <= ItemDurability.MinValue) {
                 return null;
             }
 
             var newItem = this;
-            newItem._durability = new((ushort)newDurability!);
+            newItem.Durability = new((ushort)newDurability!);
             return newItem;
         }
-
-        public readonly string Id = Guid.NewGuid().ToString();
     }
 }

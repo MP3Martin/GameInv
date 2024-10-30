@@ -5,6 +5,7 @@ using Pastel;
 namespace GameInv {
     public class GameInv(IInventory inventory, IConnectionHandler connectionHandler) {
         private static readonly Logger Log = GetLogger();
+        public readonly IInventory Inventory = inventory;
 
         public void Start() {
             Console.CancelKeyPress += (_, cea) => {

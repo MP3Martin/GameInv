@@ -10,6 +10,7 @@
     <ItemGroup>
         <PackageReference Include="Fleck" Version="1.2.0"/>
         <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
         <PackageReference Include="Pastel" Version="5.2.1"/>
         <PackageReference Include="Sherlog" Version="1.0.0"/>
         <PackageReference Include="Sherlog.Appenders" Version="1.0.3"/>
