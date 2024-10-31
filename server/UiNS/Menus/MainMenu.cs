@@ -6,6 +6,7 @@ namespace GameInv.UiNS.Menus {
             Options = [
                 ("Add an item", () => new AddItemSimpleMenu(gameInv).Show()),
                 ("Remove an item", () => new ChooseAnItemToRemoveMenu(gameInv).Show()),
+                ("Show all items", () => new ListItemsSimpleMenu(gameInv).Show()),
                 (ExitMenuString, ExitMenu)
             ];
         }

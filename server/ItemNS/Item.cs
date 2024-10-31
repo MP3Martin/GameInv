@@ -15,7 +15,7 @@ namespace GameInv.ItemNS {
             DamagePerTick = damagePerTick;
             DamagePerUse = damagePerUse;
             if ((Usable || Decays) && durability is null) {
-                Durability = new ItemDurability();
+                Durability = new ItemDurability(null);
             }
         }
         public ItemDurability? Durability { get; private set; }
@@ -57,7 +57,7 @@ namespace GameInv.ItemNS {
 
             if (Decays) additionalFields.Add(("Damage per game tick", ((ushort)DamagePerTick!).ToString()));
             if (Usable) additionalFields.Add(("Damage per use", ((ushort)DamagePerUse!).ToString()));
-            if (Durability is not null) additionalFields.Add(("Durability", ((ushort)Durability!).ToString()));
+            if (Durability is not null) additionalFields.Add(("Durability", (ushort)Durability! + " / " + ItemDurability.MaxValue));
 
             var result = new StringBuilder();
 

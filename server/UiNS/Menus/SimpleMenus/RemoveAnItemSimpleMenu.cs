@@ -9,7 +9,7 @@ namespace GameInv.UiNS.Menus.SimpleMenus {
             Console.WriteLine(item + "\n");
             if (YesNoInput("Are you sure you want to remove this item?", false)) {
                 gameInv.Inventory.RemoveItem(item);
-                ShowInfo("Item removed.");
+                ShowInfo($"Item {item.Name} removed.");
             } else {
                 Cancelled = true;
             }
