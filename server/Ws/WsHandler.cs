@@ -28,6 +28,9 @@ namespace GameInv.Ws {
              * TODO: extend the socket class - and call base methods that get hidden
              * TODO: make an authenticated property with setter and getter
              * 
+             * TODO: READ ME - nvm, actually creste a wrapper
+             * TOSO: store the instance of the wrapper indide of start scope, the wrapoer contains a peivate ref to the real socket (using interface), passed using constructor
+             * https://github.com/statianzo/Fleck/issues/201#issuecomment-313807486
              */
 
             _gameInv.Inventory.ItemsChanged += SendItems;
