@@ -24,33 +24,36 @@ namespace GameInv.ItemNS {
         public bool Decays => DamagePerTick is not null;
 
         /// <summary>
-        ///     Use the item and return the updated item or null if broken.
+        ///     Use the item
         /// </summary>
-        public Item? Use() {
+        /// <remarks>Do not use outside of <see cref="InventoryNS.IInventory" /></remarks>
+        /// <inheritdoc cref="ApplyDurabilityChange" />
+        internal bool _Use() {
             if (!Usable) throw new InvalidOperationException("Item is not usable");
+
             return ApplyDurabilityChange(DamagePerUse!.Value);
         }
 
         /// <summary>
-        ///     Tick the item durability and return the updated item or null if broken.
+        ///     Tick the item durability
         /// </summary>
-        public Item? TickDurability(int ticks) {
+        /// <remarks>Do not use outside of <see cref="InventoryNS.IInventory" /></remarks>
+        /// <inheritdoc cref="ApplyDurabilityChange" />
+        internal bool _TickDurability(int ticks) {
             if (!Decays) throw new InvalidOperationException("Item does not decay");
+
             return ApplyDurabilityChange((ItemDurability)(DamagePerTick!.Value * ticks));
         }
 
-        /// <summary>
-        ///     Apply the specified durability change and return a new item or null if broken.
-        /// </summary>
-        private Item? ApplyDurabilityChange(ItemDurability damage) {
+        /// <returns>True if the item broke</returns>
+        private bool ApplyDurabilityChange(ItemDurability damage) {
             var newDurability = Durability - damage;
             if (newDurability <= ItemDurability.MinValue) {
-                return null;
+                return true;
             }
 
-            var newItem = this;
-            newItem.Durability = new((ushort)newDurability!);
-            return newItem;
+            Durability = (ItemDurability)newDurability!;
+            return false;
         }
 
         public override string ToString() {

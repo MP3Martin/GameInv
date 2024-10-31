@@ -22,13 +22,34 @@ namespace GameInv.InventoryNS {
             Log.Info($"Item \"{item.Name}\" added");
             ItemsChanged?.Invoke();
         }
+   
+        public bool UseItem(Item item, out bool itemBroke) {
+            itemBroke = false;
+            if (!item.Usable) return false;
+            if (item._Use()) /* The item broke */ {
+                _items.Remove(item);
+                itemBroke = true;
+            } else {
+                itemBroke = false;
+            }
 
-        /// <inheritdoc cref="RemoveItem(string)" />
+            return true;
+        }
+
+        public void TickTime(int tickCount) {
+            var items = _items.ToArray();
+            foreach (var item in items) {
+                if (!item.Decays) continue;
+                if (item._TickDurability(tickCount)) /* The item broke */ {
+                    _items.Remove(item);
+                }
+            }
+        }
+        
         public bool RemoveItem(Item item) {
             return RemoveItem(item.Id);
         }
 
-        /// <returns>True if the item was successfully removed</returns>
         public bool RemoveItem(string id) {
             var index = GetItemIndex(id);
             if (index == -1) return false;
@@ -41,8 +62,7 @@ namespace GameInv.InventoryNS {
 
             return true;
         }
-
-        /// <returns>True if the item was successfully modified</returns>
+        
         public bool ModifyItem(Item item) {
             var index = GetItemIndex(item.Id);
             if (index == -1) return false;

@@ -95,7 +95,8 @@ namespace GameInv.UtilsNS {
         /// <summary>
         ///     Tries to get the user input until it can be cast into T and returns it.
         /// </summary>
-        public static T? PromptParse<T>(string prompt, Func<T, bool>? condition = null, bool emptyReturnsNull = false) where T : struct {
+        /// <returns><b>null</b> if <paramref name="emptyReturnsNull" /> is true and the user didn't input anything</returns>
+        public static T? PromptParse<T>(string prompt, bool emptyReturnsNull, Func<T, bool>? condition = null) where T : struct {
             while (true) {
                 var input = Prompt(prompt);
                 if (emptyReturnsNull && input == string.Empty) return null;
@@ -105,6 +106,13 @@ namespace GameInv.UtilsNS {
 
                 JumpToPrevLineClear();
             }
+        }
+
+        /// <summary>
+        ///     Tries to get the user input until it can be cast into T and returns it.
+        /// </summary>
+        public static T PromptParse<T>(string prompt, Func<T, bool>? condition = null) where T : struct {
+            return (T)PromptParse(prompt, false, condition)!;
         }
 
         public static (string, Action)[] ItemsAsMenuOptions(IEnumerable<Item> items, Action<Item> onSelect) {

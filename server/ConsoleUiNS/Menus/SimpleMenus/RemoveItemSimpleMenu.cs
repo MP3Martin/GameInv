@@ -1,7 +1,7 @@
 using GameInv.ItemNS;
 
 namespace GameInv.ConsoleUiNS.Menus.SimpleMenus {
-    public class RemoveAnItemSimpleMenu(GameInv gameInv, Item item) : SimpleMenu {
+    public class RemoveItemSimpleMenu(GameInv gameInv, Item item) : SimpleMenu {
         public bool Cancelled;
         protected override string Title => "Remove an item";
 
