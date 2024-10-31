@@ -30,6 +30,7 @@ namespace GameInv.Ws {
              * 
              * TODO: READ ME - nvm, actually creste a wrapper
              * TOSO: store the instance of the wrapper indide of start scope, the wrapoer contains a peivate ref to the real socket (using interface), passed using constructor
+             * _socket to register events, other stuff using rhe erapped socket
              * https://github.com/statianzo/Fleck/issues/201#issuecomment-313807486
              */
 
