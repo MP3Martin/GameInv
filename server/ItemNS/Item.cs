@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace GameInv.ItemNS {
     public class Item {
         public readonly ItemDurability? DamagePerTick;
@@ -49,9 +51,22 @@ namespace GameInv.ItemNS {
             newItem.Durability = new((ushort)newDurability!);
             return newItem;
         }
-        
+
         public override string ToString() {
-            return $"{Name} ({Id})";
+            var additionalFields = new List<(string name, string value)>();
+
+            if (Decays) additionalFields.Add(("Damage per game tick", ((ushort)DamagePerTick!).ToString()));
+            if (Usable) additionalFields.Add(("Damage per use", ((ushort)DamagePerUse!).ToString()));
+            if (Durability is not null) additionalFields.Add(("Durability", ((ushort)Durability!).ToString()));
+
+            var result = new StringBuilder();
+
+            result.AppendLine("Name: " + Name);
+            foreach (var additionalField in additionalFields) {
+                result.AppendLine($"    {additionalField.name}: {additionalField.value}");
+            }
+
+            return result.ToString();
         }
     }
 }

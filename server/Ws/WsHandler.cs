@@ -54,7 +54,7 @@ namespace GameInv.Ws {
                     } else if (message == WsPass) {
                         // Authenticated
                         socket.Authenticated = true;
-                        
+
                         SendItems(socket);
                     } else {
                         FailAuth(_socket);

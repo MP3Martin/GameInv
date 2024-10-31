@@ -23,7 +23,7 @@ namespace GameInv.InventoryNS {
             ItemsChanged?.Invoke();
         }
 
-        /// <inheritdoc cref="RemoveItem(string)"/>
+        /// <inheritdoc cref="RemoveItem(string)" />
         public bool RemoveItem(Item item) {
             return RemoveItem(item.Id);
         }

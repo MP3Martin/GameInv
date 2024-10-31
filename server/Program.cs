@@ -61,7 +61,7 @@ namespace GameInv {
                 Log.LogLevel = LogLevel.Fatal; // Disable logging
 
                 var gameInv = new GameInv(new Inventory());
-                
+
                 new MainMenu(gameInv).Show();
                 Environment.Exit(0);
             }

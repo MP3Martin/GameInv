@@ -4,8 +4,11 @@ namespace GameInv.UiNS.Menus {
     public class ChooseAnItemToRemoveMenu : MenuPage {
         public ChooseAnItemToRemoveMenu(GameInv gameInv) {
             Options = ItemsAsMenuOptions(gameInv.Inventory.ToArray(), item => {
-                new RemoveAnItemSimpleMenu(gameInv, item).Show();
-                ExitMenu();
+                var menu = new RemoveAnItemSimpleMenu(gameInv, item);
+                menu.Show();
+                if (!menu.Cancelled) {
+                    ExitMenu();
+                }
             });
         }
 

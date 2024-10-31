@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-
 namespace GameInv.Ws {
     public static class MessageHandler {
         public static void HandleMessage(string message, WebSocketConnectionInterfaceWrapper socket, GameInv gameInv) {
