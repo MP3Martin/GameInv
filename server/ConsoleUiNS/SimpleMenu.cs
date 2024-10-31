@@ -1,6 +1,6 @@
-using static GameInv.UiNS.MenuPage;
+using static GameInv.ConsoleUiNS.MenuPage;
 
-namespace GameInv.UiNS {
+namespace GameInv.ConsoleUiNS {
     public abstract class SimpleMenu : IMenu {
         private bool _shownOnce;
 

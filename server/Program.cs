@@ -5,8 +5,8 @@ global using static GameInv.UtilsNS.Consts.Colors;
 global using static GameInv.UtilsNS.Utils;
 global using static GameInv.Ws.MessageDataTools;
 using System.Drawing;
+using GameInv.ConsoleUiNS;
 using GameInv.InventoryNS;
-using GameInv.UiNS.Menus;
 using GameInv.Ws;
 using Pastel;
 
@@ -62,7 +62,7 @@ namespace GameInv {
 
                 var gameInv = new GameInv(new Inventory());
 
-                new MainMenu(gameInv).Show();
+                new ConsoleUi().Start(gameInv);
                 Environment.Exit(0);
             }
         }

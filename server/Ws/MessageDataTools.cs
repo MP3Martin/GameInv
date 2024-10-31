@@ -36,14 +36,14 @@ namespace GameInv.Ws {
 
         [JsonObject]
         public class ItemData {
-            public int? DamagePerTick;
-            public int? DamagePerUse;
-            public int? Durability;
+            public ushort? DamagePerTick;
+            public ushort? DamagePerUse;
+            public ushort? Durability;
             [JsonRequired] public required string Id;
             [JsonRequired] public required string Name;
 
             public static implicit operator Item(ItemData data) {
-                return new(data.Name, (ItemDurability?)data.DamagePerTick, (ItemDurability?)data.DamagePerUse, (ItemDurability?)data.Durability, data.Id);
+                return new(data.Name, data.DamagePerTick, data.DamagePerUse, data.Durability, data.Id);
             }
             public static implicit operator ItemData(Item item) {
                 return new() {
@@ -68,7 +68,7 @@ namespace GameInv.Ws {
             }
 
             /// <returns>Null if unsuccessful</returns>
-            public string? Serialize(Item item) {
+            public string? Serialize() {
                 try {
                     return JsonConvert.SerializeObject(this);
                 } catch (JsonSerializationException) {

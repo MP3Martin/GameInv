@@ -1,6 +1,6 @@
 using Pastel;
 
-namespace GameInv.UiNS {
+namespace GameInv.ConsoleUiNS {
     /// <remarks>
     ///     You have to put some stuff into <see cref="Options" />
     /// </remarks>
@@ -22,6 +22,7 @@ namespace GameInv.UiNS {
                 };
             }
         }
+
         protected abstract string Title { get; }
         // TODO
 // TODO: rename to consoleUi, add missing features (use item and skip time in ticks)

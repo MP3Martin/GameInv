@@ -1,6 +1,6 @@
-using GameInv.UiNS.Menus.SimpleMenus;
+using GameInv.ConsoleUiNS.Menus.SimpleMenus;
 
-namespace GameInv.UiNS.Menus {
+namespace GameInv.ConsoleUiNS.Menus {
     public class MainMenu : MenuPage {
         public MainMenu(GameInv gameInv) {
             Options = [

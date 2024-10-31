@@ -3,7 +3,7 @@
 ### Todo:
 
 - [ ] simple ui
-- [ ] kivy
+- [ ] NEXTJS Nextui
 - [ ] grid of items, button to create a new item, dialog using ModalScreen, the client can choose time skip and how much time
 - [ ] clicking the item opens a menu with info about it
 - [ ] button to use the item

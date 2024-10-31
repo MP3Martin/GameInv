@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using System.Reflection;
+using GameInv.ConsoleUiNS;
+using GameInv.ConsoleUiNS.Menus.SimpleMenus;
 using GameInv.ItemNS;
-using GameInv.UiNS;
-using GameInv.UiNS.Menus.SimpleMenus;
 
 namespace GameInv.UtilsNS {
     public static class Utils {
@@ -84,7 +84,7 @@ namespace GameInv.UtilsNS {
 
         public static void Pause(ConsoleKey? key = null, bool newLine = false) {
             if (newLine) Console.Write(Environment.NewLine);
-            Console.Write($"Press {key.ToString() ?? "any key"} to continue . . . ");
+            Console.Write($"Press {key ?? (object)"any key"} to continue . . . ");
             if (key is null) {
                 Console.ReadKey(true);
             } else {

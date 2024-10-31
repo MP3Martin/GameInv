@@ -1,6 +1,6 @@
 using GameInv.ItemNS;
 
-namespace GameInv.UiNS.Menus.SimpleMenus {
+namespace GameInv.ConsoleUiNS.Menus.SimpleMenus {
     public class AddItemSimpleMenu(GameInv gameInv) : SimpleMenu {
         protected override string Title => "Add an item";
         protected override void OnShow() {

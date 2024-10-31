@@ -1,4 +1,4 @@
-namespace GameInv.UiNS.Menus.SimpleMenus {
+namespace GameInv.ConsoleUiNS.Menus.SimpleMenus {
     public class InfoSimpleMenu(string message) : SimpleMenu {
         protected override string Title => "Info";
         protected override void OnShow() {

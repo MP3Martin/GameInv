@@ -1,4 +1,5 @@
 using System.Text;
+using Pastel;
 
 namespace GameInv.ItemNS {
     public class Item {
@@ -61,9 +62,12 @@ namespace GameInv.ItemNS {
 
             var result = new StringBuilder();
 
-            result.AppendLine("Name: " + Name);
+            var fieldNameColor = DodgerBlue;
+            var fieldValueColor = DarkOrange;
+
+            result.AppendLine("Name".Pastel(fieldNameColor) + ": " + Name.Pastel(fieldValueColor));
             foreach (var additionalField in additionalFields) {
-                result.AppendLine($"    {additionalField.name}: {additionalField.value}");
+                result.AppendLine($"  {additionalField.name.Pastel(fieldNameColor)}: {additionalField.value.Pastel(fieldValueColor)}");
             }
 
             return result.ToString();
