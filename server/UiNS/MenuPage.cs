@@ -23,7 +23,7 @@ namespace GameInv.UiNS {
             }
         }
         protected abstract string Title { get; }
-
+// TODO: rename to consoleUi, add missing features (use item and skip time in ticks)
         public void Show() {
             if (_shownOnce) return;
             _shownOnce = true;
