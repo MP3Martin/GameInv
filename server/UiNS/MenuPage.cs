@@ -1,7 +1,6 @@
 using Pastel;
-using static System.Drawing.Color;
 
-namespace CarGarage.Ui {
+namespace GameInv.UiNS {
     /// <remarks>
     ///     You have to put some stuff into <see cref="Options" />
     /// </remarks>

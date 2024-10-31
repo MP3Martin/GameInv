@@ -1,4 +1,4 @@
-namespace CarGarage.Ui.Menus.SimpleMenus {
+namespace GameInv.UiNS.Menus.SimpleMenus {
     public class InfoSimpleMenu(string message) : SimpleMenu {
         protected override string Title => "Info";
         protected override void OnShow() {

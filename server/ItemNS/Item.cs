@@ -49,5 +49,9 @@ namespace GameInv.ItemNS {
             newItem.Durability = new((ushort)newDurability!);
             return newItem;
         }
+        
+        public override string ToString() {
+            return $"{Name} ({Id})";
+        }
     }
 }

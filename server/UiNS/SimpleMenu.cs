@@ -1,6 +1,6 @@
-using static CarGarage.Ui.MenuPage;
+using static GameInv.UiNS.MenuPage;
 
-namespace CarGarage.Ui {
+namespace GameInv.UiNS {
     public abstract class SimpleMenu : IMenu {
         private bool _shownOnce;
 

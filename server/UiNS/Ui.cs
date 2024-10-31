@@ -1,5 +1,3 @@
-namespace GameInv.Ui {
-    public class Ui {
-        
-    }
+namespace GameInv.UiNS {
+    public class Ui { }
 }

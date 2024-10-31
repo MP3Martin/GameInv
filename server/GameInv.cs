@@ -6,13 +6,13 @@ namespace GameInv {
     /// <summary>
     ///     The <i>"main"</i> class
     /// </summary>
-    public class GameInv(IInventory inventory, IConnectionHandler connectionHandler) {
+    public class GameInv(IInventory inventory, IConnectionHandler? connectionHandler = null) {
         private static readonly Logger Log = GetLogger();
         public readonly IInventory Inventory = inventory;
 
         public void Start() {
-            Console.CancelKeyPress += (_, cea) => {
-                cea.Cancel = true;
+            Console.CancelKeyPress += (_, ea) => {
+                ea.Cancel = true;
                 Log.Info("Stopping...");
                 Stop();
                 Log.Info("Bye.");
@@ -21,13 +21,16 @@ namespace GameInv {
 
             Log.Info("Instance created");
 
-            connectionHandler.GameInv = this;
-            Log.Info($"Starting connection handler ({connectionHandler.GetType().Name.Pastel(Highlight)})");
-            connectionHandler.Start();
+            if (connectionHandler is not null) {
+                connectionHandler.GameInv = this;
+            }
+
+            Log.Info($"Starting connection handler ({(connectionHandler?.GetType().Name ?? "").Pastel(Highlight)})");
+            connectionHandler?.Start();
         }
 
         private void Stop() {
-            connectionHandler.Stop();
+            connectionHandler?.Stop();
         }
     }
 }
