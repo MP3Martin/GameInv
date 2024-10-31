@@ -1,8 +1,8 @@
-using Fleck;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace GameInv.Ws {
     public static class MessageHandler {
-        public static void HandleMessage(string message, IWebSocketConnection socket, GameInv gameInv) {
+        public static void HandleMessage(string message, WebSocketConnectionInterfaceWrapper socket, GameInv gameInv) {
             if (!DecodeMessage(message, out var commandType, out var messageUuid, out var commandData)) {
                 Success(false, "Invalid message format");
                 return;
@@ -30,7 +30,8 @@ namespace GameInv.Ws {
             }
 
             void HandleAddItem() {
-                if (ModifiedItem.Deserialize(commandData, out var item)) {
+                var item = ItemData.Deserialize(commandData);
+                if (item is not null) {
                     gameInv.Inventory.AddItem(item!);
                     Success(true);
                     return;
@@ -40,7 +41,8 @@ namespace GameInv.Ws {
             }
 
             void HandleModifyItem() {
-                if (ModifiedItem.Deserialize(commandData, out var item)) {
+                var item = ItemData.Deserialize(commandData);
+                if (item is not null) {
                     gameInv.Inventory.ModifyItem(item!);
                     Success(true);
                     return;

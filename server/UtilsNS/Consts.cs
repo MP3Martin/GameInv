@@ -2,7 +2,10 @@ using System.Drawing;
 
 namespace GameInv.UtilsNS {
     public static class Consts {
-        public const int TicksPerSecond = 20;
+        public const string ExitMenuString = "Exit";
+        public const string GoBackMenuString = "Go back";
+        public static readonly Color ExitMenuColor = Goldenrod;
+        
         public const string LogTimeFormat = "yyyy-MM-dd HH:mm:ss";
         public const string WsUri = "ws://0.0.0.0:9081";
         public const string WsPass = "changeme";
@@ -15,3 +18,8 @@ namespace GameInv.UtilsNS {
         }
     }
 }
+
+// TODO: remove this
+// client payloads
+// login
+// Y2hhbmdlbWU=

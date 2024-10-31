@@ -34,52 +34,8 @@ namespace GameInv.Ws {
             return $"{commandType.ToLower()}|{messageUuid}|{Convert.ToBase64String(Encoding.UTF8.GetBytes(commandData))}";
         }
 
-        public static class ModifiedItem {
-            /// <returns>Success</returns>
-            public static bool Deserialize(string data, out Item? item) {
-                item = null;
-
-                var modifiedItemData = ModifiedItemData.Deserialize(data);
-                if (modifiedItemData is null) return false;
-
-                item = modifiedItemData.ItemData;
-                return true;
-            }
-
-            /// <returns>Null if unsuccessful</returns>
-            public static string? Serialize(Item item) {
-                return new ModifiedItemData { ItemData = item }.Serialize();
-            }
-        }
-
-        /// <summary>
-        ///     Received from client
-        /// </summary>
-        [JsonObject(ItemRequired = Required.Always)]
-        private class ModifiedItemData {
-            public required ItemData ItemData;
-
-            /// <returns>Null if unsuccessful</returns>
-            public static ModifiedItemData? Deserialize(string data) {
-                try {
-                    return JsonConvert.DeserializeObject<ModifiedItemData>(data);
-                } catch (JsonSerializationException) {
-                    return null;
-                }
-            }
-
-            /// <returns>Null if unsuccessful</returns>
-            public string? Serialize() {
-                try {
-                    return JsonConvert.SerializeObject(this);
-                } catch (JsonSerializationException) {
-                    return null;
-                }
-            }
-        }
-
         [JsonObject]
-        private class ItemData {
+        public class ItemData {
             public int? DamagePerTick;
             public int? DamagePerUse;
             public int? Durability;
@@ -97,6 +53,27 @@ namespace GameInv.Ws {
                     Name = item.Name,
                     Id = item.Id
                 };
+            }
+
+            /// <returns>Success</returns>
+            public static Item? Deserialize(string data) {
+                try {
+                    var result = JsonConvert.DeserializeObject<ItemData>(data);
+                    if (result is not null) {
+                        return (Item)result;
+                    }
+                } catch (JsonSerializationException) { }
+
+                return null;
+            }
+
+            /// <returns>Null if unsuccessful</returns>
+            public string? Serialize(Item item) {
+                try {
+                    return JsonConvert.SerializeObject(this);
+                } catch (JsonSerializationException) {
+                    return null;
+                }
             }
         }
 

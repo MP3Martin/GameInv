@@ -1,13 +1,12 @@
 using System.Collections.Concurrent;
 using Fleck;
 using Newtonsoft.Json;
-using LogLevel = Fleck.LogLevel;
 
 namespace GameInv.Ws {
     /// <inheritdoc />
     public class WsHandler : IConnectionHandler {
         private static readonly Logger Log = GetLogger();
-        private static readonly ConcurrentDictionary<Guid, IWebSocketConnection> AllSockets = new();
+        private static readonly ConcurrentDictionary<Guid, WebSocketConnectionInterfaceWrapper> AllSockets = new();
         private readonly AutoResetEvent _sleepUntilStopped = new(false);
 
         private GameInv _gameInv = null!;
@@ -19,58 +18,46 @@ namespace GameInv.Ws {
             if (_gameInv == null!) {
                 throw new InvalidOperationException("GameInv not set");
             }
-            
-            
-            /*
-             *
-             * TODO: auth - don't send to socket if not authed
-             * TODO: add a method that bypasses auth - for messages pre-auth
-             * TODO: extend the socket class - and call base methods that get hidden
-             * TODO: make an authenticated property with setter and getter
-             * 
-             * TODO: READ ME - nvm, actually creste a wrapper
-             * TOSO: store the instance of the wrapper indide of start scope, the wrapoer contains a peivate ref to the real socket (using interface), passed using constructor
-             * _socket to register events, other stuff using rhe erapped socket
-             * https://github.com/statianzo/Fleck/issues/201#issuecomment-313807486
-             */
 
             _gameInv.Inventory.ItemsChanged += SendItems;
 
-            const string authenticated = "authenticated"; // TODO: move this to ^
-
             _server = new(WsUri);
             FleckLog.LogAction = (_, _, _) => { }; // Disable FleckLog logging
-            _server.Start(socket => {
-                socket.OnOpen = () => {
+
+            // ReSharper disable once InconsistentNaming
+            _server.Start(_socket => {
+                // Only use _socket in pre-auth
+                var socket = new WebSocketConnectionInterfaceWrapper(_socket);
+                _socket.OnOpen = () => {
                     if (!AllSockets.TryAdd(socket.ConnectionInfo.Id, socket)) return;
                     Log.Info($"Socket {socket.ConnectionInfo.Id} connected");
-
-                    // Store auth state
-                    socket.ConnectionInfo.Headers[authenticated] = "false";
 
                     // Set a timeout to disconnect if no auth received
                     Task.Run(async () => {
                         await Task.Delay(5000);
-                        if (!socket.IsAvailable || socket.ConnectionInfo.Headers[authenticated] == "true") return;
-                        await socket.Send(EncodeMessage("disconnect", null, "Failed auth"));
-                        socket.Close();
-                        Log.Info($"Socket {socket.ConnectionInfo.Id} disconnected due to auth timeout");
+                        if (!socket.IsAvailable || socket.Authenticated) return;
+                        FailAuth(_socket);
                     });
                 };
-                socket.OnClose = () => {
+                _socket.OnClose = () => {
                     if (AllSockets.TryRemove(socket.ConnectionInfo.Id, out _)) {
                         Log.Info($"Socket {socket.ConnectionInfo.Id} disconnected");
                     }
                 };
-                socket.OnMessage = message => {
-                    if (socket.ConnectionInfo.Headers[authenticated] == "true") {
+                _socket.OnMessage = message => {
+                    if (socket.Authenticated) {
                         try {
                             MessageHandler.HandleMessage(message, socket, _gameInv);
                         } catch (Exception e) {
                             Log.Error($"Error handling message: {e}");
                         }
                     } else if (message == WsPass) {
-                        socket.ConnectionInfo.Headers[authenticated] = "true";
+                        // Authenticated
+                        socket.Authenticated = true;
+                        
+                        SendItems(socket);
+                    } else {
+                        FailAuth(_socket);
                     }
                 };
             });
@@ -101,8 +88,13 @@ namespace GameInv.Ws {
                 }
             }
         }
+        private static void FailAuth(IWebSocketConnection socket) {
+            socket.Send(EncodeMessage("disconnect", null, "Failed auth"));
+            socket.Close();
+            Log.Info($"Socket {socket.ConnectionInfo.Id} failed auth");
+        }
 
-        private void SendItems(IWebSocketConnection socket) {
+        private void SendItems(WebSocketConnectionInterfaceWrapper socket) {
             var serializedItems = JsonConvert.SerializeObject(_gameInv.Inventory.ToList());
             var message = EncodeMessage("items", null, serializedItems);
             socket.Send(message);
