@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body, #__next, #__next > div {
+  /* I am so sorry, but this is the only thing that made
+  the footer stay at the bottom without the navbar weirdly disappearing when scrolling */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+div:has(div > div > .popover-fix-z-index) {
+  /* Hacky fix */
+  z-index: 49 !important;
+}
+
+.item-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, 13rem);
+
+  @media (max-width: 500px) {
+    display: flex;
+    flex-direction: column;
+  }
+}
