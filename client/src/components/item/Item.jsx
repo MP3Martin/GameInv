@@ -30,13 +30,6 @@ export default function Item ({
   return (
     <Card className="w-full h-fit">
       <CardHeader className="flex gap-3">
-        {/* <Image */}
-        {/*   alt="nextui logo" */}
-        {/*   height={40} */}
-        {/*   radius="sm" */}
-        {/*   src="https://avatars.githubusercontent.com/u/86160567?s=200&v=4" */}
-        {/*   width={40} */}
-        {/* /> */}
         <div className="flex flex-col">
           <p className="text-lg min-h-4">{item.name.trim() ? item.name : (<>&nbsp;</>)}</p>
           {itemProperty('Durability', item.durability, value => parseFloat((durabilityPercentage(value)).toFixed(3)) + '%', (value) =>
