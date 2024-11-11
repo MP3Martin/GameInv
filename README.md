@@ -1,3 +1,9 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/MP3Martin/GameInv/badge)](#/)
+[<img src="https://img.shields.io/github/license/MP3Martin/GameInv">](#/)
+[<img src="https://img.shields.io/github/stars/MP3Martin/GameInv?style=flat">](#/)
+[<img src="https://img.shields.io/github/forks/MP3Martin/GameInv?style=flat">](#/)
+[<img src="https://img.shields.io/github/issues/MP3Martin/GameInv">](#/)
+
 # GameInv
 
 ## Usage
