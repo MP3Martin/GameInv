@@ -40,7 +40,7 @@ export default function Item ({
         <div className="flex flex-col">
           <p className="text-lg min-h-4">{item.name.trim() ? item.name : (<>&nbsp;</>)}</p>
           {itemProperty('Durability', item.durability, value => parseFloat((durabilityPercentage(value)).toFixed(3)) + '%', (value) =>
-            <ItemDurabilityProgress durabilityPercentage={value} />)}
+            <ItemDurabilityProgress durability={value} />)}
           {itemProperty('Damage per tick', item.damagePerTick, value => (value + ' / ' + siteConfig.ushortMax))}
           {itemProperty('Damage per use', item.damagePerUse, value => (value + ' / ' + siteConfig.ushortMax))}
         </div>

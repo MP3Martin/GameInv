@@ -7,6 +7,9 @@ const nextConfig = {
   },
   sassOptions: {
     silenceDeprecations: ['legacy-js-api']
+  },
+  compiler: {
+    styledComponents: true
   }
 };
 
