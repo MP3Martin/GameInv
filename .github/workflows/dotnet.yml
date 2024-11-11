@@ -1,0 +1,48 @@
+name: Build and Publish .NET release assets
+
+env:
+  PROJECT_DIR: ./server
+
+permissions:
+  contents: write
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.PROJECT_DIR }}
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Publish Linux
+        run: |
+          dotnet publish -p:PublishProfile=FolderProfile-Linux.pubxml
+
+      - name: Publish Windows
+        run: |
+          dotnet publish -p:PublishProfile=FolderProfile-Windows.pubxml
+
+      - name: Rename Assets
+        run: |
+          cd bin/publish/linux-x64 && mv GameInv GameInv-${{ github.ref_name }}-Linux-x64
+          cd ../win-x64 && mv GameInv.exe GameInv-${{ github.ref_name }}-Windows-x64.exe
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ env.PROJECT_DIR }}/bin/publish/linux-x64/GameInv-${{ github.ref_name }}-Linux-x64
+            ${{ env.PROJECT_DIR }}/bin/publish/win-x64/GameInv-${{ github.ref_name }}-Windows-x64.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

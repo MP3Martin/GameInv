@@ -8,9 +8,14 @@
 
 ## Usage
 
-1. Download the [server folder](https://download-directory.github.io/?url=https%3A%2F%2Fgithub.com%2FMP3Martin%2FGameInv%2Ftree%2Fmain%2Fserver), extract it and open it in your favourite IDE, install the required dependencies and run the program. Or just use any other way to build the project.
-2. Run the program and press Y to enter the WS server mode.
+1. Get the GameInv server
+   1. by downloading the [lastest build from releases](https://github.com/MP3Martin/GameInv/releases/latest/)
+   2. <details><summary>or ...</summary>or download the <a href="https://download-directory.github.io/?url=https%3A%2F%2Fgithub.com%2FMP3Martin%2FGameInv%2Ftree%2Fmain%2Fserver">server folder</a>, extract it and open it in your favourite IDE, install the required dependencies, modify the code however you want and run the program. Or just use any other way to build the project.</details>
+2. Run the program (the server) and press Y to enter the WS server mode.
 3. Open https://mp3martin.github.io/GameInv/ in your browser and everything should connect automatically. Use the cogwheel on the top right to change settings.
+
+> [!WARNING]
+Do not run the server publically, it is just a demo/showcase and not advanced enough to be secure and handle attacks.
 
 ## Docs
 

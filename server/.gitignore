@@ -70,7 +70,7 @@ publish/
 
 # Publish Web Output
 *.Publish.xml
-*.pubxml
+# *.pubxml
 *.azurePubxml
 
 # NuGet Packages Directory
@@ -134,3 +134,4 @@ _NCrunch*
 
 # Custom
 .idea/
+.vs/
