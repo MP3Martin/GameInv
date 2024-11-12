@@ -1,4 +1,5 @@
 import { camelizeKeys } from 'humps';
+import { Base64 } from 'js-base64';
 
 import { useGlobalStore } from '@/hooks/store/globalStore';
 
@@ -24,7 +25,7 @@ export const handleMessage = (message) => {
 
     if (messageParts.length !== 3) return;
     [commandType, messageUuid, messageData] = messageParts;
-    messageData = atob(messageData);
+    messageData = Base64.decode(messageData);
     messageData = JSON.parse(messageData);
     messageData = camelizeKeys(messageData);
   } catch { return; }

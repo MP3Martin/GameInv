@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import { Base64 } from 'js-base64';
 
 import { useGlobalStore } from '@/hooks/store/globalStore';
 import { wsStatus } from '@/config/consts/enums';
@@ -17,9 +18,32 @@ export default async function sendMessage (commandType, data) {
 
     const messageUuid = uuidv4();
 
-    if (tryResolveConfirm !== null) myReject('Different message is already being sent');
-    if (get_sendMessage() === null) myReject('_sendMessage is null');
-    if (getWsStatus() !== wsStatus.open) myReject('Websocket is not open');
+    // Checking
+    if (tryResolveConfirm !== null) {
+      myReject('Different message is already being sent');
+
+      return;
+    }
+    if (get_sendMessage() === null) {
+      myReject('_sendMessage is null');
+
+      return;
+    }
+    if (getWsStatus() !== wsStatus.open) {
+      myReject('Websocket is not open');
+
+      return;
+    }
+
+    let message;
+
+    try {
+      message = `${commandType}|${messageUuid}|${Base64.encode(data)}`;
+    } catch (e) {
+      myReject('Failed to encode message: ' + e);
+
+      return;
+    }
 
     setTryResolveConfirm(tryResolve);
 
@@ -27,7 +51,7 @@ export default async function sendMessage (commandType, data) {
       myResolve(false, 'Timeout');
     }, 5000);
 
-    get_sendMessage()(`${commandType}|${messageUuid}|${btoa(data)}`);
+    get_sendMessage()(message);
 
     // Beginning of functions
 

@@ -33,6 +33,7 @@
         "immer": "^10.1.1",
         "intl-messageformat": "^10.7.4",
         "javascript-color-gradient": "^2.5.0",
+        "js-base64": "^3.7.7",
         "lodash.merge": "^4.6.2",
         "next": "15.0.2",
         "next-themes": "^0.3.0",

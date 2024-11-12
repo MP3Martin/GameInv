@@ -32,7 +32,10 @@ export default function InfoButton ({ tooltipPlacement = 'bottom' }) {
                 ['react'],
                 ['zustand'],
                 ['immer'],
-                ['framer-motion']
+                ['framer-motion'],
+                ['javascript-color-gradient'],
+                ['styled-components'],
+                ['js-base64']
               ].map((item) => (
                 <li key={item[0]}>
                   <Link
