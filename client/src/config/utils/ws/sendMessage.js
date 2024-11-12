@@ -18,9 +18,21 @@ export default async function sendMessage (commandType, data) {
     const messageUuid = uuidv4();
 
     // Checking
-    if (tryResolveConfirm !== null) myReject('Different message is already being sent');
-    if (get_sendMessage() === null) myReject('_sendMessage is null');
-    if (getWsStatus() !== wsStatus.open) myReject('Websocket is not open');
+    if (tryResolveConfirm !== null) {
+      myReject('Different message is already being sent');
+
+      return;
+    }
+    if (get_sendMessage() === null) {
+      myReject('_sendMessage is null');
+
+      return;
+    }
+    if (getWsStatus() !== wsStatus.open) {
+      myReject('Websocket is not open');
+
+      return;
+    }
 
     let message;
 
