@@ -18,32 +18,21 @@ export default async function sendMessage (commandType, data) {
 
     const messageUuid = uuidv4();
 
-    // Checking
-    if (tryResolveConfirm !== null) {
-      myReject('Different message is already being sent');
+    // Checking and handling errors
 
-      return;
-    }
-    if (get_sendMessage() === null) {
-      myReject('_sendMessage is null');
-
-      return;
-    }
-    if (getWsStatus() !== wsStatus.open) {
-      myReject('Websocket is not open');
-
-      return;
-    }
+    if (tryResolveConfirm !== null) return myReject('Different message is already being sent');
+    if (get_sendMessage() === null) return myReject('_sendMessage is null');
+    if (getWsStatus() !== wsStatus.open) return myReject('Websocket is not open');
 
     let message;
 
     try {
       message = `${commandType}|${messageUuid}|${Base64.encode(data)}`;
     } catch (e) {
-      myReject('Failed to encode message: ' + e);
-
-      return;
+      return myReject('Failed to encode message: ' + e);
     }
+
+    // Send the message
 
     setTryResolveConfirm(tryResolve);
 
@@ -61,7 +50,9 @@ export default async function sendMessage (commandType, data) {
       myResolve(data.success, data.message);
     }
 
-    // Also handles cleanup
+    /**
+     * Also handles cleanup
+     */
     function myResolve (success, message) {
       // Cleanup
       clearTimeout(timeoutTimer);
@@ -74,6 +65,9 @@ export default async function sendMessage (commandType, data) {
       }
     }
 
+    /**
+     * Reject without any cleanup
+     */
     function myReject (message) {
       reject(new Error(message));
     }
