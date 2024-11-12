@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import { Base64 } from 'js-base64';
 
 import { useGlobalStore } from '@/hooks/store/globalStore';
 import { wsStatus } from '@/config/consts/enums';
@@ -37,7 +38,7 @@ export default async function sendMessage (commandType, data) {
     let message;
 
     try {
-      message = `${commandType}|${messageUuid}|${btoa(data)}`;
+      message = `${commandType}|${messageUuid}|${Base64.encode(data)}`;
     } catch (e) {
       myReject('Failed to encode message: ' + e);
 

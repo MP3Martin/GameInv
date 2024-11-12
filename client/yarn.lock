@@ -3867,6 +3867,7 @@ __metadata:
     immer: "npm:^10.1.1"
     intl-messageformat: "npm:^10.7.4"
     javascript-color-gradient: "npm:^2.5.0"
+    js-base64: "npm:^3.7.7"
     lodash.merge: "npm:^4.6.2"
     next: "npm:15.0.2"
     next-themes: "npm:^0.3.0"
@@ -4535,6 +4536,13 @@ __metadata:
   bin:
     jiti: bin/jiti.js
   checksum: 10c0/05b9ed58cd30d0c3ccd3c98209339e74f50abd9a17e716f65db46b6a35812103f6bde6e134be7124d01745586bca8cc5dae1d0d952267c3ebe55171949c32e56
+  languageName: node
+  linkType: hard
+
+"js-base64@npm:^3.7.7":
+  version: 3.7.7
+  resolution: "js-base64@npm:3.7.7"
+  checksum: 10c0/3c905a7e78b601e4751b5e710edd0d6d045ce2d23eb84c9df03515371e1b291edc72808dc91e081cb9855aef6758292a2407006f4608ec3705373dd8baf2f80f
   languageName: node
   linkType: hard
 
