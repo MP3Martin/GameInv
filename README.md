@@ -14,8 +14,11 @@
 2. Run the program (the server) and press Y to enter the WS server mode.
 3. Open https://mp3martin.github.io/GameInv/ in your browser and everything should connect automatically. Use the cogwheel on the top right to change settings.
 
-> [!WARNING]
-Do not run the server publically, it is just a demo/showcase and not advanced enough to be secure and handle attacks.
+> [!WARNING]  
+> Do not run the server publically, it is just a demo/showcase and not advanced enough to be secure and handle attacks.
+
+> [!IMPORTANT]  
+> Microsoft Defender is reporting the automatically built exes as a virus, i am trying to resolve that. But i definitely won't fix the issue by buying a certificate.
 
 ## Docs
 
