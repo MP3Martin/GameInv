@@ -18,7 +18,7 @@
 > Do not run the server publically, it is just a demo/showcase and not advanced enough to be secure and handle attacks.
 
 > [!IMPORTANT]  
-> Microsoft Defender is reporting the automatically built exes as a virus, i am trying to resolve that. But i definitely won't fix the issue by buying a certificate.
+> Microsoft Defender is reporting the automatically built exes as a virus, i will try to resolve that. The current fix is to allow the `.exe` in Defender. But i definitely won't fix the issue by buying a certificate.
 
 ## Docs
 
