@@ -16,7 +16,7 @@ export default function InfoButton ({ tooltipPlacement = 'bottom' }) {
 
   return (
     <MyPopover content={
-      <>
+      <div className="info-button-popover-scroll">
         This website allows you to connect to GameInv server using a Next.js NextUI web interface.
         <br /><br />
         Credits:
@@ -48,7 +48,7 @@ export default function InfoButton ({ tooltipPlacement = 'bottom' }) {
             }
           </ul>
         </div>
-      </>
+      </div>
     } isOpen={isOpen} popoverPlacement={'bottom-end'} title="Info" tooltipPlacement={tooltipPlacement} trigger={
       <Button isIconOnly size={'md'} variant={'light'} onClick={() => isOpen ? onClose : onOpen}>
         <IconInfoCircle className="text-default-500" size={28} />

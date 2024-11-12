@@ -25,3 +25,8 @@ div:has(div > div > .popover-fix-z-index) {
     flex-direction: column;
   }
 }
+
+div:has(> div > div > div > div > div > div > div > div.info-button-popover-scroll) {
+  /* Hacky fix */
+  overflow-y: scroll;
+}
