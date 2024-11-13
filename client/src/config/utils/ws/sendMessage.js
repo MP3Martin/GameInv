@@ -27,7 +27,7 @@ export default async function sendMessage (commandType, data) {
     let message;
 
     try {
-      message = `${commandType}|${messageUuid}|${Base64.encode(data)}`;
+      message = `${commandType}|${messageUuid}|${Base64.encode(data.toString())}`;
     } catch (e) {
       return myReject('Failed to encode message: ' + e);
     }
