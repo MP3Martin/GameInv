@@ -11,6 +11,7 @@ export default function ItemDurabilityProgress ({
   const ProgressColorProvider = styled.div`
       & + div > div > div {
           background-color: ${percentageToDamageColor(percentage)};
+          transition-property: transform, background-color !important;
       }
   `;
 
