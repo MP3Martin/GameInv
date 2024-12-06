@@ -26,7 +26,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      work_dir: "client"
+      work_dir: "web-client"
     defaults:
       run:
         working-directory: ${{ env.work_dir }}
@@ -58,7 +58,7 @@ jobs:
       - name: Set basePath in siteConfig
         uses: richardrigutins/replace-in-files@v2
         with:
-          files: 'client/src/config/consts/site.js'
+          files: 'web-client/src/config/consts/site.js'
           search-text: "/* basePathReplaceStart */''/* basePathReplaceEnd */"
           replacement-text: "'${{ steps.conf-pages.outputs.base_path }}'"
       - name: Restore cache
