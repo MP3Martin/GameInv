@@ -24,7 +24,7 @@ export default function InfoButton ({ tooltipPlacement = 'bottom' }) {
           <ul className={'list-disc list-outside break-words'}>
             {
               [
-                ['[OTHER]', 'https://github.com/MP3Martin/GameInv/blob/main/client/package.json'],
+                ['[OTHER]', 'https://github.com/MP3Martin/GameInv/blob/main/web-client/package.json'],
                 ['Soumya Ranjan Padhy - useScreenSize', 'https://dev.to/soumyarian/usescreensize-a-custom-react-hook-for-dynamic-screen-size-detection-5e59'],
                 ['@tabler/icons-react'],
                 ['@nextui-org/react'],
