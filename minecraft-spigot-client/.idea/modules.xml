@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/GameInv-bukkit-client.iml" filepath="$PROJECT_DIR$/GameInv-bukkit-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gameinv-spigot-client.iml" filepath="$PROJECT_DIR$/gameinv-spigot-client.iml" />
     </modules>
   </component>
 </project>

@@ -1,0 +1,4 @@
+name: GameInv-spigot-client
+version: '1.0.0'
+main: xyz.mp3martin.gameInvSpigotClient.GameInvSpigotClient
+api-version: '1.12.2'

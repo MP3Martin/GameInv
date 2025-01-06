@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>xyz.mp3martin</groupId>
-    <artifactId>gameinv-bukkit-client</artifactId>
+    <artifactId>gameinv-spigot-client</artifactId>
     <version><!--versionReplaceStart-->1.0.0<!--versionReplaceEnd--></version>
     <packaging>jar</packaging>
 
-    <name>GameInv-Minecraft-Bukkit-client</name>
+    <name>GameInv-Minecraft-Spigot-client</name>
 
     <properties>
         <java.version>1.8</java.version>
