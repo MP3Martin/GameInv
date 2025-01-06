@@ -80,6 +80,4 @@ fabric.properties
 target/**
 
 # Custom
-.idea/*
-!.idea/.gitignore
-!.idea/runConfigurations/
+.idea/discord.xml
