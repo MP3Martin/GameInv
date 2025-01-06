@@ -6,6 +6,7 @@ class GameInvSpigotClient : JavaPlugin() {
 
     override fun onEnable() {
         // Plugin startup logic
+        logger.info("GameInv spigot client is working!")
     }
 
     override fun onDisable() {
