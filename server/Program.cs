@@ -14,15 +14,16 @@ namespace GameInv {
     public static class Program {
         private static readonly Logger Log = GetLogger();
         public static void Main(string[] args) {
-            LoadEnv();
+            MyEnv.LoadEnv();
 
-            var useWsServer = YesNoInput(
-                """
-                Y - Use WebSocket server
-                N - Use console UI
+            var useWsServer = MyEnv.GetBool("WS_SERVER") ??
+                YesNoInput(
+                    """
+                    Y - Use WebSocket server
+                    N - Use console UI
 
 
-                """, true);
+                    """, true);
             ClearAll();
 
             if (useWsServer) {

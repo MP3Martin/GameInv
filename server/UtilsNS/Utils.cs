@@ -1,12 +1,11 @@
 using System.Diagnostics;
 using System.Reflection;
-using DotNetEnv;
 using GameInv.ConsoleUiNS;
 using GameInv.ConsoleUiNS.Menus.SimpleMenus;
 using GameInv.ItemNS;
 
 namespace GameInv.UtilsNS {
-    public static class Utils {
+    public static partial class Utils {
         /// <summary>
         ///     Do not use this outside of a class constructor. <br />
         ///     Basically do not use this unless you are absolutely sure you know what you are doing.
@@ -122,13 +121,6 @@ namespace GameInv.UtilsNS {
                     onSelect(x);
                 })
             ).ToArray();
-        }
-
-        public static void LoadEnv() {
-            var options = Env.NoEnvVars().TraversePath().Load();
-            foreach (var (key, value) in options) {
-                Environment.SetEnvironmentVariable(EnvPrefix + key, value);
-            }
         }
 
         #region From Jez @ SO
