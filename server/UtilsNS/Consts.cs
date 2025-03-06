@@ -7,7 +7,9 @@ namespace GameInv.UtilsNS {
 
         public const string LogTimeFormat = "yyyy-MM-dd HH:mm:ss";
         public const string WsUri = "ws://0.0.0.0:9081";
-        public const string WsPass = "changeme";
+        public const string WsPass = "changeme"; // todo put into env
+
+        public const string EnvPrefix = "GAMEINV_";
         public static readonly Color ExitMenuColor = Goldenrod;
 
         public static class Colors {

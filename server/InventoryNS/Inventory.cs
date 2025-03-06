@@ -49,6 +49,7 @@ namespace GameInv.InventoryNS {
             if (itemBroke) {
                 Log.Info($"Item \"{item.Name}\" broke");
             }
+
             ItemsChanged?.Invoke();
 
             return true;

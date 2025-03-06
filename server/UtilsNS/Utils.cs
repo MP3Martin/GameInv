@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Reflection;
+using DotNetEnv;
 using GameInv.ConsoleUiNS;
 using GameInv.ConsoleUiNS.Menus.SimpleMenus;
 using GameInv.ItemNS;
@@ -121,6 +122,13 @@ namespace GameInv.UtilsNS {
                     onSelect(x);
                 })
             ).ToArray();
+        }
+
+        public static void LoadEnv() {
+            var options = Env.NoEnvVars().TraversePath().Load();
+            foreach (var (key, value) in options) {
+                Environment.SetEnvironmentVariable(EnvPrefix + key, value);
+            }
         }
 
         #region From Jez @ SO

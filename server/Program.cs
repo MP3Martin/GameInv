@@ -5,7 +5,6 @@ global using static GameInv.UtilsNS.Consts.Colors;
 global using static GameInv.UtilsNS.Utils;
 global using static GameInv.Ws.MessageDataTools;
 using System.Drawing;
-using DotNetEnv;
 using GameInv.ConsoleUiNS;
 using GameInv.InventoryNS;
 using GameInv.Ws;
@@ -15,10 +14,7 @@ namespace GameInv {
     public static class Program {
         private static readonly Logger Log = GetLogger();
         public static void Main(string[] args) {
-            Console.WriteLine(Env.TraversePath().Load().Count());
-            Console.WriteLine(Env.GetString("ALLUSERSPROFILE"));
-
-            Thread.Sleep(-1);
+            LoadEnv();
 
             var useWsServer = YesNoInput(
                 """
