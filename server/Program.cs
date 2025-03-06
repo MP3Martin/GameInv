@@ -16,7 +16,7 @@ namespace GameInv {
         public static void Main(string[] args) {
             MyEnv.LoadEnv();
 
-            var useWsServer = MyEnv.GetBool("WS_SERVER") ??
+            var useWsServer = MyEnv.GetBool("USE_WS_SERVER") ??
                 YesNoInput(
                     """
                     Y - Use WebSocket server
@@ -61,7 +61,7 @@ namespace GameInv {
                 } catch (Exception e) {
                     Log.Error(e.ToString());
                 }
-            } else /* Console ui */ {
+            } else /* Console UI */ {
                 Log.LogLevel = LogLevel.Fatal; // Disable logging
 
                 var gameInv = new GameInv(new Inventory());
