@@ -6,6 +6,7 @@ global using static GameInv.UtilsNS.Utils;
 global using static GameInv.Ws.MessageDataTools;
 using System.Drawing;
 using GameInv.ConsoleUiNS;
+using GameInv.Db;
 using GameInv.InventoryNS;
 using GameInv.Ws;
 using Pastel;
@@ -32,6 +33,21 @@ namespace GameInv {
                     true
                 );
             ClearAll();
+
+            var dbConnectionString = MyEnv.GetString("DB_CONNECTION_STRING");
+            if (useDb && dbConnectionString is null) {
+                Console.WriteLine(
+                    $"No DB connection string set.\n" +
+                    $"Set it using DB_CONNECTION_STRING in .env file or using the {EnvPrefix}DB_CONNECTION_STRING environment variable.");
+                Pause(newLine: true);
+                Environment.Exit(0);
+            }
+
+            IItemDataSource? itemDataSource = useDb
+                ? new MySqlItemDataSource {
+                    ConnectionString = dbConnectionString!
+                }
+                : null;
 
             if (useWsServer) {
                 var logLevelColorMap = new Dictionary<LogLevel, Color> {
@@ -62,7 +78,8 @@ namespace GameInv {
                 try {
                     _ = new GameInv(
                         new Inventory(),
-                        new WsConnectionHandler()
+                        new WsConnectionHandler(),
+                        itemDataSource
                     );
                 } catch (Exception e) {
                     Log.Error(e.ToString());
@@ -70,7 +87,7 @@ namespace GameInv {
             } else /* Console UI */ {
                 Log.LogLevel = LogLevel.Fatal; // Disable logging
 
-                var gameInv = new GameInv(new Inventory());
+                var gameInv = new GameInv(new Inventory(), itemDataSource: itemDataSource);
 
                 new ConsoleUi().Start(gameInv);
                 Environment.Exit(0);
