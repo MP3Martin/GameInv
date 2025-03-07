@@ -4,12 +4,14 @@ namespace GameInv.UtilsNS {
     public static partial class Utils {
         public static class MyEnv {
             /// <summary>
-            /// Loads env variables from .env
+            ///     Loads env variables from .env
             /// </summary>
             public static void LoadEnv() {
                 var options = Env.NoEnvVars().TraversePath().Load();
                 foreach (var (key, value) in options) {
-                    if (string.IsNullOrEmpty(value)) continue; // Do not overwrite the system env variable if the .env one is empty
+                    // Do not overwrite the system env variable if the one in .env is empty
+                    if (string.IsNullOrEmpty(value)) continue;
+
                     Environment.SetEnvironmentVariable(EnvPrefix + key, value);
                 }
             }
