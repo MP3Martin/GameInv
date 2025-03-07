@@ -52,12 +52,11 @@ namespace GameInv {
 
                 Log.Info($"Creating a new instance of {nameof(GameInv).Pastel(Highlight)}...");
 
-                var gameInv = new GameInv(
-                    new Inventory(),
-                    new WsHandler()
-                );
                 try {
-                    gameInv.Start();
+                    _ = new GameInv(
+                        new Inventory(),
+                        new WsConnectionHandler()
+                    );
                 } catch (Exception e) {
                     Log.Error(e.ToString());
                 }
