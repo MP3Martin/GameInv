@@ -65,7 +65,7 @@ namespace GameInv.UtilsNS {
                 $" [{(defaultAnswer ?? false ? "Y" : "y")}/{(defaultAnswer ?? true ? "n" : "N")}]");
             Console.CursorVisible = false;
 
-            try {
+            return TryFinally(() => {
                 while (true) {
                     var key = Console.ReadKey(true).Key;
 
@@ -77,9 +77,10 @@ namespace GameInv.UtilsNS {
                         return (bool)defaultAnswer;
                     }
                 }
-            } finally {
+            }, result => {
+                Console.Write(' ' + (result ? 'y' : 'n'));
                 Console.CursorVisible = true;
-            }
+            });
         }
 
         public static void Pause(ConsoleKey? key = null, bool newLine = false) {
@@ -121,6 +122,18 @@ namespace GameInv.UtilsNS {
                     onSelect(x);
                 })
             ).ToArray();
+        }
+
+        // Original code thanks to Tomas Petricek @ https://stackoverflow.com/a/2359452/10518428
+        public static T TryFinally<T>(Func<T> body, Action<T> finallyHandler) {
+            var result = default(T);
+            try {
+                result = body();
+            } finally {
+                finallyHandler(result!);
+            }
+
+            return result;
         }
 
         #region From Jez @ SO

@@ -24,6 +24,16 @@ namespace GameInv {
 
 
                     """, true);
+            // ClearAll();
+
+            var useDb = MyEnv.GetBool("USE_DB") ??
+                YesNoInput(
+                    """
+                    Y - Use MySQL DB
+                    N - Don't use DB (will lose state on exit)
+
+
+                    """, true);
             ClearAll();
 
             if (useWsServer) {
