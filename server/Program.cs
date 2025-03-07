@@ -16,24 +16,21 @@ namespace GameInv {
         public static void Main(string[] args) {
             MyEnv.LoadEnv();
 
-            var useWsServer = MyEnv.GetBool("USE_WS_SERVER") ??
+            var envUseWsServer = MyEnv.GetBool("USE_WS_SERVER");
+            var useWsServer = envUseWsServer ??
                 YesNoInput(
-                    """
-                    Y - Use WebSocket server
-                    N - Use console UI
+                    "Use WebSocket server",
+                    "Use console UI",
+                    true
+                );
 
-
-                    """, true);
-            // ClearAll();
-
+            if (envUseWsServer is null) Console.WriteLine();
             var useDb = MyEnv.GetBool("USE_DB") ??
                 YesNoInput(
-                    """
-                    Y - Use MySQL DB
-                    N - Don't use DB (will lose state on exit)
-
-
-                    """, true);
+                    "Use MySQL DB",
+                    "Don't use DB (will lose state on exit)",
+                    true
+                );
             ClearAll();
 
             if (useWsServer) {

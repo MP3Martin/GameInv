@@ -53,6 +53,10 @@ namespace GameInv.UtilsNS {
             new InfoSimpleMenu(message).Show();
         }
 
+        public static bool YesNoInput(string yesDescription, string noDescription, bool? defaultAnswer = null) {
+            return YesNoInput($"Y - {yesDescription}\nN - {noDescription}", defaultAnswer);
+        }
+
         /// <summary>
         ///     A yes/no input with optional default yes/no
         /// </summary>
@@ -60,10 +64,11 @@ namespace GameInv.UtilsNS {
         ///     Yes -> <c>true</c><br />
         ///     No -> <c>false</c>
         /// </returns>
-        public static bool YesNoInput(string? prompt = null, bool? defaultAnswer = null) {
-            Console.WriteLine((prompt ?? "") +
-                $" [{(defaultAnswer ?? false ? "Y" : "y")}/{(defaultAnswer ?? true ? "n" : "N")}]");
+        public static bool YesNoInput(string? prompt = null, bool? defaultAnswer = null, bool addNewlines = true) {
             Console.CursorVisible = false;
+            Console.Write((prompt ?? "") +
+                (addNewlines ? "\n\n" : "") +
+                $" [{(defaultAnswer ?? false ? "Y" : "y")}/{(defaultAnswer ?? true ? "n" : "N")}]");
 
             return TryFinally(() => {
                 while (true) {
@@ -78,7 +83,7 @@ namespace GameInv.UtilsNS {
                     }
                 }
             }, result => {
-                Console.Write(' ' + (result ? 'y' : 'n'));
+                Console.WriteLine(" " + (result ? 'y' : 'n'));
                 Console.CursorVisible = true;
             });
         }
