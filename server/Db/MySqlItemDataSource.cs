@@ -27,6 +27,7 @@ namespace GameInv.Db {
             return result;
         }
 
+        /// <returns>Success</returns>
         public bool UpdateItem(Item item) {
             using var connection = new MySqlConnection(ConnectionString);
             connection.Open();
@@ -50,8 +51,20 @@ namespace GameInv.Db {
             return command.ExecuteNonQuery() == 1;
         }
 
-        public bool RemoveItem() {
-            throw new NotImplementedException();
+        /// <returns>Success</returns>
+        public bool RemoveItem(Item item) {
+            using var connection = new MySqlConnection(ConnectionString);
+            connection.Open();
+
+            var command = connection.CreateCommand();
+
+            command.CommandText = "DELETE FROM items WHERE id=@id";
+            command.Parameters.Add("@id", MySqlDbType.String, 36).Value = item.Id;
+
+            command.Prepare();
+            command.Parameters["@id"].Value = item.Id;
+
+            return command.ExecuteNonQuery() == 1;
         }
     }
 }

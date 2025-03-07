@@ -8,6 +8,6 @@ namespace GameInv.Db {
 
         public bool UpdateItem(Item item);
 
-        public bool RemoveItem();
+        public bool RemoveItem(Item item);
     }
 }
