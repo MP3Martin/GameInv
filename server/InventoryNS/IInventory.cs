@@ -1,7 +1,10 @@
+using GameInv.Db;
 using GameInv.ItemNS;
 
 namespace GameInv.InventoryNS {
     public interface IInventory : IEnumerable<Item> {
+        IItemDataSource? ItemDataSource { get; }
+
         public void AddItem(Item item);
 
         /// <inheritdoc cref="UseItem(string,out bool)" />

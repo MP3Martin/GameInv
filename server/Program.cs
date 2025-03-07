@@ -7,7 +7,6 @@ global using static GameInv.Ws.MessageDataTools;
 using System.Drawing;
 using GameInv.ConsoleUiNS;
 using GameInv.Db;
-using GameInv.InventoryNS;
 using GameInv.Ws;
 using Pastel;
 
@@ -77,7 +76,6 @@ namespace GameInv {
 
                 try {
                     _ = new GameInv(
-                        new Inventory(),
                         new WsConnectionHandler(),
                         itemDataSource
                     );
@@ -87,7 +85,7 @@ namespace GameInv {
             } else /* Console UI */ {
                 Log.LogLevel = LogLevel.Fatal; // Disable logging
 
-                var gameInv = new GameInv(new Inventory(), itemDataSource: itemDataSource);
+                var gameInv = new GameInv(itemDataSource: itemDataSource);
 
                 new ConsoleUi().Start(gameInv);
                 Environment.Exit(0);

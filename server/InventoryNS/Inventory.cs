@@ -1,10 +1,12 @@
 using System.Collections;
+using GameInv.Db;
 using GameInv.ItemNS;
 
 namespace GameInv.InventoryNS {
-    public class Inventory : IInventory {
+    public class Inventory(IItemDataSource? itemDataSource = null) : IInventory {
         private static readonly Logger Log = GetLogger();
         private readonly List<Item> _items = [];
+        public IItemDataSource? ItemDataSource { get; } = itemDataSource;
 
         public event Action? ItemsChanged;
 
@@ -17,6 +19,11 @@ namespace GameInv.InventoryNS {
         }
 
         public void AddItem(Item item) {
+            if (ItemDataSource is not null) {
+                var result = ItemDataSource.UpdateItem(item);
+                if (result == false) return;
+            }
+
             _items.Add(item);
 
             Log.Info($"Item \"{item.Name}\" added");
@@ -62,6 +69,10 @@ namespace GameInv.InventoryNS {
                 if (item._TickDurability(tickCount)) /* The item broke */ {
                     _items.Remove(item);
                 }
+
+                if (ItemDataSource is not null) {
+                    _ = ItemDataSource.UpdateItem(item);
+                }
             }
 
             Log.Info("Time ticked");
@@ -76,6 +87,11 @@ namespace GameInv.InventoryNS {
             var index = GetItemIndex(id);
             if (index == -1) return false;
 
+            if (ItemDataSource is not null) {
+                var result = ItemDataSource.RemoveItem(_items[index]);
+                if (result == false) return false;
+            }
+
             var name = _items[index].Name;
             _items.RemoveAt(index);
 
@@ -88,6 +104,11 @@ namespace GameInv.InventoryNS {
         public bool ModifyItem(Item item) {
             var index = GetItemIndex(item.Id);
             if (index == -1) return false;
+
+            if (ItemDataSource is not null) {
+                var result = ItemDataSource.UpdateItem(_items[index]);
+                if (result == false) return false;
+            }
 
             _items.RemoveAt(index);
             _items.Insert(index, item);

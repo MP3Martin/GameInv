@@ -10,45 +10,53 @@ namespace GameInv {
     public class GameInv {
         private static readonly Logger Log = GetLogger();
         private readonly IConnectionHandler? _clientConnectionHandler;
+        private readonly IItemDataSource? _itemDataSource;
         public readonly IInventory Inventory;
 
         /// <summary>
         ///     The <i>"main"</i> class
         /// </summary>
-        public GameInv(IInventory inventory, IConnectionHandler? clientConnectionHandler = null, IItemDataSource? itemDataSource = null) {
+        public GameInv(IConnectionHandler? clientConnectionHandler = null, IItemDataSource? itemDataSource = null) {
             _clientConnectionHandler = clientConnectionHandler;
-            Inventory = inventory;
+            _itemDataSource = itemDataSource;
 
-            if (clientConnectionHandler is not null) {
+            Inventory = new Inventory(itemDataSource);
+
+            if (_clientConnectionHandler is not null) {
                 StartClientConnection();
             }
 
-            if (itemDataSource is not null) {
+            if (_itemDataSource is not null) {
                 StartItemDataSource();
             }
         }
 
         private void StartItemDataSource() {
-// TODO
+            if (_itemDataSource is null) return;
+
+            var items = _itemDataSource.GetItems();
+            foreach (var item in items) {
+                Inventory.AddItem(item);
+            }
         }
 
         private void StartClientConnection() {
+            if (_clientConnectionHandler is null) return;
+
             Console.CancelKeyPress += (_, ea) => {
                 ea.Cancel = true;
                 Log.Info("Stopping...");
-                _clientConnectionHandler?.Stop();
+                _clientConnectionHandler.Stop();
                 Log.Info("Bye.");
                 Environment.Exit(0);
             };
 
             Log.Info("Instance created");
 
-            if (_clientConnectionHandler is not null) {
-                _clientConnectionHandler.GameInv = this;
-            }
+            _clientConnectionHandler.GameInv = this;
 
-            Log.Info($"Starting connection handler ({(_clientConnectionHandler?.GetType().Name ?? "").Pastel(Highlight)})");
-            _clientConnectionHandler?.Start();
+            Log.Info($"Starting connection handler ({_clientConnectionHandler.GetType().Name.Pastel(Highlight)})");
+            _clientConnectionHandler.Start();
         }
     }
 }
