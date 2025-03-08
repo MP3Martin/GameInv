@@ -27,7 +27,6 @@ namespace GameInv.Db {
             return result;
         }
 
-        /// <returns>Success</returns>
         public bool UpdateItem(Item item) {
             using var connection = new MySqlConnection(ConnectionString);
             connection.Open();
@@ -51,7 +50,6 @@ namespace GameInv.Db {
             return command.ExecuteNonQuery() == 1;
         }
 
-        /// <returns>Success</returns>
         public bool RemoveItem(Item item) {
             using var connection = new MySqlConnection(ConnectionString);
             connection.Open();

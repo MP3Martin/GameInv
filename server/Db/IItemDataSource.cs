@@ -6,8 +6,10 @@ namespace GameInv.Db {
 
         public IEnumerable<Item> GetItems();
 
+        /// <returns>Success</returns>
         public bool UpdateItem(Item item);
 
+        /// <returns>Success</returns>
         public bool RemoveItem(Item item);
     }
 }

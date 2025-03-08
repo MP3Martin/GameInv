@@ -20,8 +20,7 @@ namespace GameInv.InventoryNS {
 
         public void AddItem(Item item) {
             if (ItemDataSource is not null) {
-                var result = ItemDataSource.UpdateItem(item);
-                if (result == false) return;
+                if (ItemDataSource.UpdateItem(item) == false) return;
             }
 
             _items.Add(item);
