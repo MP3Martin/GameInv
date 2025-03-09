@@ -6,6 +6,8 @@
 
 # GameInv
 
+<img src="https://github.com/user-attachments/assets/ec6888ef-99f1-45ac-98d6-dd92d97555fa" width="950px" />
+
 ## Usage
 
 1. Get the GameInv server
