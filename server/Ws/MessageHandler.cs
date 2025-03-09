@@ -67,8 +67,7 @@ namespace GameInv.Ws {
                     return;
                 }
 
-                gameInv.Inventory.TickTime(tickCount);
-                Success(true);
+                Success(gameInv.Inventory.TickTime(tickCount));
             }
         }
     }

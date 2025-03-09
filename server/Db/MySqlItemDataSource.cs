@@ -86,6 +86,38 @@ namespace GameInv.Db {
             }
         }
 
+        public bool RemoveItems(IEnumerable<Item> items) {
+            try {
+                items = items.ToArray();
+
+                using var connection = CreateAndOpenConnection();
+
+                using var transaction = connection.BeginTransaction();
+                using var command = connection.CreateCommand();
+                command.CommandText = "DELETE FROM items WHERE id=@id";
+                command.Parameters.Add("@id", MySqlDbType.String, 36);
+                command.Prepare();
+                command.Transaction = transaction;
+
+                var deletedRows = 0;
+                try {
+                    foreach (var item in items) {
+                        command.Parameters["@id"].Value = item.Id;
+                        deletedRows += command.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+                } catch {
+                    transaction.Rollback();
+                    throw;
+                }
+
+                return deletedRows == items.Count();
+            } catch (MySqlException) {
+                return false;
+            }
+        }
+
         private MySqlConnection CreateAndOpenConnection() {
             var connection = new MySqlConnection(ConnectionString);
             connection.Open();

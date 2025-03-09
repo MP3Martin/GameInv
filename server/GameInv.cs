@@ -36,6 +36,7 @@ namespace GameInv {
 
             var items = _itemDataSource.GetItems(out var errorMessage);
             if (items is null) {
+                Log.LogLevel = LogLevel.Fatal;
                 Console.Clear();
                 Console.WriteLine($"Couldn't get items from {_itemDataSource.SourceName}. " +
                     $"Make sure everything is running and correctly set up.\n\n" +

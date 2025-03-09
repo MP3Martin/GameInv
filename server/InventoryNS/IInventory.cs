@@ -12,7 +12,8 @@ namespace GameInv.InventoryNS {
         /// <returns>True if the item was successfully used</returns>
         public bool UseItem(string id, out bool itemBroke);
 
-        public void TickTime(int tickCount);
+        /// <returns>True if the time got ticked successfully</returns>
+        public bool TickTime(int tickCount);
 
         /// <returns>True if the item was successfully modified</returns>
         public bool ModifyItem(Item item);

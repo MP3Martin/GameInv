@@ -16,5 +16,8 @@ namespace GameInv.Db {
 
         /// <inheritdoc cref="UpdateItem" />
         public bool RemoveItem(Item item);
+
+        /// <inheritdoc cref="UpdateItem" />
+        public bool RemoveItems(IEnumerable<Item> items);
     }
 }

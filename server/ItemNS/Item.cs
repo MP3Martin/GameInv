@@ -50,6 +50,15 @@ namespace GameInv.ItemNS {
             return ApplyDurabilityChange((ItemDurability)(DamagePerTick!.Value * ticks));
         }
 
+        /// <summary>
+        ///     Set the item durability. Use only when absolutely needed.
+        /// </summary>
+        /// <inheritdoc cref="_TickDurability" />
+        internal void _SetDurability(ItemDurability durability) {
+            if (durability < ItemDurability.MinValue || durability > ItemDurability.MaxValue) return;
+            Durability = durability;
+        }
+
         /// <returns>True if the item broke</returns>
         private bool ApplyDurabilityChange(ItemDurability damage) {
             var newDurability = Durability - damage;

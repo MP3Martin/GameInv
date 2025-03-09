@@ -20,7 +20,10 @@ namespace GameInv.InventoryNS {
 
         public void AddItem(Item item) {
             if (ItemDataSource is not null) {
-                if (!ItemDataSource.UpdateItem(item)) return;
+                if (!ItemDataSource.UpdateItem(item)) {
+                    Log.Error($"Failed to save new item to {ItemDataSource.SourceName}, undoing.");
+                    return;
+                }
             }
 
             _items.Add(item);
@@ -50,12 +53,12 @@ namespace GameInv.InventoryNS {
             var useResult = item._Use();
             itemBroke = useResult;
             if (itemBroke) {
-                if (RemoveItem(item, true)) return false;
+                if (!RemoveItem(item, true)) return false;
             }
 
-            if (ItemDataSource is not null) {
+            if (ItemDataSource is not null && !itemBroke) {
                 if (!ItemDataSource.UpdateItem(item)) {
-                    Log.Error("Failed to save used item to DB, undoing.");
+                    Log.Error($"Failed to save used item to {ItemDataSource.SourceName}, undoing.");
                     _items[index] = oldItem!;
                     return false;
                 }
@@ -71,21 +74,48 @@ namespace GameInv.InventoryNS {
             return true;
         }
 
-        public void TickTime(int tickCount) {
+        public bool TickTime(int tickCount) {
             var items = _items.ToArray();
-            foreach (var item in items) {
-                if (!item.Decays) continue;
-                if (item._TickDurability(tickCount)) /* The item broke */ {
-                    _items.Remove(item);
-                }
 
-                if (ItemDataSource is not null) {
-                    _ = ItemDataSource.UpdateItem(item);
-                } // TODO
+            Dictionary<Item, ItemDurability>? modifiedItemsPreviousDurabilities = null;
+            Dictionary<Item, int>? removedItemsIndexes = null;
+
+            if (ItemDataSource is not null) {
+                modifiedItemsPreviousDurabilities = new();
+                removedItemsIndexes = new();
             }
 
-            Log.Info("Time ticked");
+            foreach (var item in items) {
+                if (!item.Decays) continue;
+                var itemDurability = item.Durability;
+                if (item._TickDurability(tickCount)) /* The item broke */ {
+                    if (ItemDataSource is not null) removedItemsIndexes?.Add(item, _items.IndexOf(item));
+                    _items.Remove(item);
+                } else {
+                    if (ItemDataSource is not null) modifiedItemsPreviousDurabilities?.Add(item, (ItemDurability)itemDurability!);
+                }
+            }
+
+            if (ItemDataSource is not null) {
+                if (!ItemDataSource.RemoveItems(removedItemsIndexes!.Keys) || !ItemDataSource.UpdateItems(modifiedItemsPreviousDurabilities!.Keys)) {
+                    Log.Error("Failed to tick time, undoing");
+
+                    foreach (var (item, index) in removedItemsIndexes) {
+                        _items.Insert(index, item);
+                    }
+
+                    foreach (var (item, durability) in modifiedItemsPreviousDurabilities!) {
+                        _items[_items.IndexOf(item)]._SetDurability(durability);
+                    }
+
+                    return false;
+                }
+            }
+
+            Log.Info($"Time ticked for {tickCount} ticks");
             ItemsChanged?.Invoke();
+
+            return true;
         }
 
         public bool RemoveItem(Item item, bool noLog = false) {
@@ -93,9 +123,11 @@ namespace GameInv.InventoryNS {
             if (index == -1) return false;
 
             if (ItemDataSource is not null) {
-                Log.Error("Failed to remove item from DB, undoing.");
                 var result = ItemDataSource.RemoveItem(_items[index]);
-                if (!result) return false;
+                if (!result) {
+                    Log.Error($"Failed to remove item from {ItemDataSource.SourceName}, undoing.");
+                    return false;
+                }
             }
 
             var name = _items[index].Name;
@@ -120,6 +152,7 @@ namespace GameInv.InventoryNS {
                 var oldItem = (Item)item.Clone();
 
                 if (!ItemDataSource.UpdateItem(_items[index])) {
+                    Log.Error($"Failed to save modified item to {ItemDataSource.SourceName}, undoing.");
                     _items[index] = oldItem;
                     return false;
                 }
