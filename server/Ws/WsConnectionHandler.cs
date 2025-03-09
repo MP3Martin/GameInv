@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace GameInv.Ws {
     /// <inheritdoc />
-    public class WsHandler : IConnectionHandler {
+    public class WsConnectionHandler : IConnectionHandler {
         private static readonly Logger Log = GetLogger();
         private static readonly ConcurrentDictionary<Guid, WebSocketConnectionInterfaceWrapper> AllSockets = new();
         private readonly AutoResetEvent _sleepUntilStopped = new(false);

@@ -5,7 +5,7 @@ using GameInv.ConsoleUiNS.Menus.SimpleMenus;
 using GameInv.ItemNS;
 
 namespace GameInv.UtilsNS {
-    public static class Utils {
+    public static partial class Utils {
         /// <summary>
         ///     Do not use this outside of a class constructor. <br />
         ///     Basically do not use this unless you are absolutely sure you know what you are doing.
@@ -53,6 +53,10 @@ namespace GameInv.UtilsNS {
             new InfoSimpleMenu(message).Show();
         }
 
+        public static bool YesNoInput(string yesDescription, string noDescription, bool? defaultAnswer = null) {
+            return YesNoInput($"Y - {yesDescription}\nN - {noDescription}", defaultAnswer);
+        }
+
         /// <summary>
         ///     A yes/no input with optional default yes/no
         /// </summary>
@@ -60,12 +64,13 @@ namespace GameInv.UtilsNS {
         ///     Yes -> <c>true</c><br />
         ///     No -> <c>false</c>
         /// </returns>
-        public static bool YesNoInput(string? prompt = null, bool? defaultAnswer = null) {
-            Console.WriteLine((prompt ?? "") +
-                $" [{(defaultAnswer ?? false ? "Y" : "y")}/{(defaultAnswer ?? true ? "n" : "N")}]");
+        public static bool YesNoInput(string? prompt = null, bool? defaultAnswer = null, bool addNewlines = true) {
             Console.CursorVisible = false;
+            Console.Write((prompt ?? "") +
+                (addNewlines ? "\n\n" : "") +
+                $" [{(defaultAnswer ?? false ? "Y" : "y")}/{(defaultAnswer ?? true ? "n" : "N")}]");
 
-            try {
+            return TryFinally(() => {
                 while (true) {
                     var key = Console.ReadKey(true).Key;
 
@@ -77,9 +82,10 @@ namespace GameInv.UtilsNS {
                         return (bool)defaultAnswer;
                     }
                 }
-            } finally {
+            }, result => {
+                Console.WriteLine(" " + (result ? 'y' : 'n'));
                 Console.CursorVisible = true;
-            }
+            });
         }
 
         public static void Pause(ConsoleKey? key = null, bool newLine = false) {
@@ -121,6 +127,18 @@ namespace GameInv.UtilsNS {
                     onSelect(x);
                 })
             ).ToArray();
+        }
+
+        // Original code thanks to Tomas Petricek @ https://stackoverflow.com/a/2359452/10518428
+        public static T TryFinally<T>(Func<T> body, Action<T> finallyHandler) {
+            var result = default(T);
+            try {
+                result = body();
+            } finally {
+                finallyHandler(result!);
+            }
+
+            return result;
         }
 
         #region From Jez @ SO

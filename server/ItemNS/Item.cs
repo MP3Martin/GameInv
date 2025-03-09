@@ -2,7 +2,7 @@ using System.Text;
 using Pastel;
 
 namespace GameInv.ItemNS {
-    public class Item {
+    public class Item : ICloneable {
         public readonly ItemDurability? DamagePerTick;
         public readonly ItemDurability? DamagePerUse;
         public readonly string Id;
@@ -24,6 +24,10 @@ namespace GameInv.ItemNS {
         public bool Usable => DamagePerUse is not null;
         public bool Decays => DamagePerTick is not null;
 
+        public object Clone() {
+            return ItemData.Deserialize(((ItemData)this).Serialize()!)!;
+        }
+
         /// <summary>
         ///     Use the item
         /// </summary>
@@ -44,6 +48,15 @@ namespace GameInv.ItemNS {
             if (!Decays) throw new InvalidOperationException("Item does not decay");
 
             return ApplyDurabilityChange((ItemDurability)(DamagePerTick!.Value * ticks));
+        }
+
+        /// <summary>
+        ///     Set the item durability. Use only when absolutely needed.
+        /// </summary>
+        /// <inheritdoc cref="_TickDurability" />
+        internal void _SetDurability(ItemDurability durability) {
+            if (durability < ItemDurability.MinValue || durability > ItemDurability.MaxValue) return;
+            Durability = durability;
         }
 
         /// <returns>True if the item broke</returns>

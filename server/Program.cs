@@ -6,7 +6,7 @@ global using static GameInv.UtilsNS.Utils;
 global using static GameInv.Ws.MessageDataTools;
 using System.Drawing;
 using GameInv.ConsoleUiNS;
-using GameInv.InventoryNS;
+using GameInv.Db;
 using GameInv.Ws;
 using Pastel;
 
@@ -14,14 +14,39 @@ namespace GameInv {
     public static class Program {
         private static readonly Logger Log = GetLogger();
         public static void Main(string[] args) {
-            var useWsServer = YesNoInput(
-                """
-                Y - Use WebSocket server
-                N - Use console UI
+            MyEnv.LoadEnv();
 
+            var envUseWsServer = MyEnv.GetBool("USE_WS_SERVER");
+            var useWsServer = envUseWsServer ??
+                YesNoInput(
+                    "Use WebSocket server",
+                    "Use console UI",
+                    true
+                );
 
-                """, true);
+            if (envUseWsServer is null) Console.WriteLine();
+            var useDb = MyEnv.GetBool("USE_DB") ??
+                YesNoInput(
+                    "Use MySQL DB",
+                    "Don't use DB (will lose state on exit)",
+                    true
+                );
             ClearAll();
+
+            var dbConnectionString = MyEnv.GetString("DB_CONNECTION_STRING");
+            if (useDb && dbConnectionString is null) {
+                Console.WriteLine(
+                    $"No DB connection string set.\n" +
+                    $"Set it using DB_CONNECTION_STRING in .env file or using the {EnvPrefix}DB_CONNECTION_STRING environment variable.");
+                Pause(newLine: true);
+                Environment.Exit(0);
+            }
+
+            IItemDataSource? itemDataSource = useDb
+                ? new MySqlItemDataSource {
+                    ConnectionString = dbConnectionString!
+                }
+                : null;
 
             if (useWsServer) {
                 var logLevelColorMap = new Dictionary<LogLevel, Color> {
@@ -49,19 +74,18 @@ namespace GameInv {
 
                 Log.Info($"Creating a new instance of {nameof(GameInv).Pastel(Highlight)}...");
 
-                var gameInv = new GameInv(
-                    new Inventory(),
-                    new WsHandler()
-                );
                 try {
-                    gameInv.Start();
+                    _ = new GameInv(
+                        new WsConnectionHandler(),
+                        itemDataSource
+                    );
                 } catch (Exception e) {
                     Log.Error(e.ToString());
                 }
-            } else /* Console ui */ {
+            } else /* Console UI */ {
                 Log.LogLevel = LogLevel.Fatal; // Disable logging
 
-                var gameInv = new GameInv(new Inventory());
+                var gameInv = new GameInv(itemDataSource: itemDataSource);
 
                 new ConsoleUi().Start(gameInv);
                 Environment.Exit(0);
