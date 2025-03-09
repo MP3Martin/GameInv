@@ -127,10 +127,10 @@ namespace GameInv.Db {
         private static Item MapItem(MySqlDataReader reader) {
             return new(
                 (string)reader["name"],
-                (ItemDurability)reader["damagePerTick"],
-                (ItemDurability)reader["damagePerUse"],
-                (ItemDurability)reader["durability"],
-                (string)reader["id"]
+                GetNullableValue<ItemDurability>(reader["damagePerTick"]),
+                GetNullableValue<ItemDurability>(reader["damagePerUse"]),
+                GetNullableValue<ItemDurability>(reader["durability"]),
+                reader["id"].ToString()
             );
         }
 
@@ -162,10 +162,14 @@ namespace GameInv.Db {
 
         private static void SetItemParameters(MySqlCommand command, Item item) {
             command.Parameters["@name"].Value = item.Name;
-            command.Parameters["@damagePerTick"].Value = item.DamagePerTick;
-            command.Parameters["@damagePerUse"].Value = item.DamagePerUse;
-            command.Parameters["@durability"].Value = item.Durability;
+            command.Parameters["@damagePerTick"].Value = (ushort?)item.DamagePerTick;
+            command.Parameters["@damagePerUse"].Value = (ushort?)item.DamagePerUse;
+            command.Parameters["@durability"].Value = (ushort?)item.Durability;
             command.Parameters["@id"].Value = item.Id;
+        }
+
+        private static T? GetNullableValue<T>(object value) where T : struct {
+            return value == DBNull.Value ? null : (T?)value;
         }
     }
 }

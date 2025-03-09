@@ -5,7 +5,7 @@ namespace GameInv.InventoryNS {
     public interface IInventory : IEnumerable<Item> {
         IItemDataSource? ItemDataSource { get; }
 
-        public void AddItem(Item item);
+        public void AddItem(Item item, bool noLog = false);
 
         /// <inheritdoc cref="UseItem(string,out bool)" />
         public bool UseItem(Item item, out bool itemBroke);

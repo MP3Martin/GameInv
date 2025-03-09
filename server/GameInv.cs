@@ -27,7 +27,7 @@ namespace GameInv {
             }
 
             if (_clientConnectionHandler is not null) {
-                StartClientConnection();
+                StartClientConnectionHandler();
             }
         }
 
@@ -45,12 +45,16 @@ namespace GameInv {
                 Environment.Exit(0);
             }
 
+            items = items.ToArray();
+
             foreach (var item in items) {
-                Inventory.AddItem(item);
+                Inventory.AddItem(item, true);
             }
+
+            Log.Info($"Loaded {items.Count()} items from {_itemDataSource.SourceName}");
         }
 
-        private void StartClientConnection() {
+        private void StartClientConnectionHandler() {
             if (_clientConnectionHandler is null) return;
 
             Console.CancelKeyPress += (_, ea) => {
@@ -60,8 +64,6 @@ namespace GameInv {
                 Log.Info("Bye.");
                 Environment.Exit(0);
             };
-
-            Log.Info("Instance created");
 
             _clientConnectionHandler.GameInv = this;
 

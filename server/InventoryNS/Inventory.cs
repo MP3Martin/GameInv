@@ -18,7 +18,7 @@ namespace GameInv.InventoryNS {
             return GetEnumerator();
         }
 
-        public void AddItem(Item item) {
+        public void AddItem(Item item, bool noLog = false) {
             if (ItemDataSource is not null) {
                 if (!ItemDataSource.UpdateItem(item)) {
                     Log.Error($"Failed to save new item to {ItemDataSource.SourceName}, undoing.");
@@ -28,7 +28,7 @@ namespace GameInv.InventoryNS {
 
             _items.Add(item);
 
-            Log.Info($"Item \"{item.Name}\" added");
+            if (!noLog) Log.Info($"Item \"{item.Name}\" added");
             ItemsChanged?.Invoke();
         }
 
