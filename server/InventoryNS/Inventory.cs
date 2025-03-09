@@ -20,7 +20,7 @@ namespace GameInv.InventoryNS {
 
         public void AddItem(Item item) {
             if (ItemDataSource is not null) {
-                if (ItemDataSource.UpdateItem(item) == false) return;
+                if (!ItemDataSource.UpdateItem(item)) return;
             }
 
             _items.Add(item);
@@ -42,13 +42,23 @@ namespace GameInv.InventoryNS {
 
             if (!item.Usable) return false;
 
-            var useResult = item._Use();
+            Item? oldItem = null;
+            if (ItemDataSource is not null) {
+                oldItem = (Item)item.Clone();
+            }
 
-            if (useResult) /* The item broke */ {
-                _items.Remove(item);
-                itemBroke = true;
-            } else {
-                itemBroke = false;
+            var useResult = item._Use();
+            itemBroke = useResult;
+            if (itemBroke) {
+                if (RemoveItem(item, true)) return false;
+            }
+
+            if (ItemDataSource is not null) {
+                if (!ItemDataSource.UpdateItem(item)) {
+                    Log.Error("Failed to save used item to DB, undoing.");
+                    _items[index] = oldItem!;
+                    return false;
+                }
             }
 
             Log.Info($"Item \"{item.Name}\" used");
@@ -71,42 +81,48 @@ namespace GameInv.InventoryNS {
 
                 if (ItemDataSource is not null) {
                     _ = ItemDataSource.UpdateItem(item);
-                }
+                } // TODO
             }
 
             Log.Info("Time ticked");
             ItemsChanged?.Invoke();
         }
 
-        public bool RemoveItem(Item item) {
-            return RemoveItem(item.Id);
-        }
-
-        public bool RemoveItem(string id) {
-            var index = GetItemIndex(id);
+        public bool RemoveItem(Item item, bool noLog = false) {
+            var index = _items.IndexOf(item);
             if (index == -1) return false;
 
             if (ItemDataSource is not null) {
+                Log.Error("Failed to remove item from DB, undoing.");
                 var result = ItemDataSource.RemoveItem(_items[index]);
-                if (result == false) return false;
+                if (!result) return false;
             }
 
             var name = _items[index].Name;
             _items.RemoveAt(index);
 
-            Log.Info($"Item \"{name}\" removed");
+            if (!noLog) Log.Info($"Item \"{name}\" removed");
             ItemsChanged?.Invoke();
 
             return true;
+        }
+
+        public bool RemoveItem(string id, bool noLog = false) {
+            return RemoveItem(_items[GetItemIndex(id)], noLog);
         }
 
         public bool ModifyItem(Item item) {
             var index = GetItemIndex(item.Id);
             if (index == -1) return false;
 
+
             if (ItemDataSource is not null) {
-                var result = ItemDataSource.UpdateItem(_items[index]);
-                if (result == false) return false;
+                var oldItem = (Item)item.Clone();
+
+                if (!ItemDataSource.UpdateItem(_items[index])) {
+                    _items[index] = oldItem;
+                    return false;
+                }
             }
 
             _items.RemoveAt(index);

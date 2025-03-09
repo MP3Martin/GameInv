@@ -33,7 +33,9 @@ namespace GameInv.Db {
 
             var command = connection.CreateCommand();
 
-            command.CommandText = "INSERT INTO items VALUES (@name, @damagePerTick, @damagePerUse, @durability, @id) ON DUPLICATE KEY UPDATE";
+            command.CommandText =
+                "INSERT INTO items VALUES (@name, @damagePerTick, @damagePerUse, @durability, @id) ON DUPLICATE KEY UPDATE name=@name, damagePerTick=@damagePerTick, damagePerUse=@damagePerUse, durability=@durability";
+
             command.Parameters.Add("@name", MySqlDbType.VarChar, 70).Value = item.Name;
             command.Parameters.Add("@damagePerTick", MySqlDbType.UInt16).Value = item.DamagePerTick;
             command.Parameters.Add("@damagePerUse", MySqlDbType.UInt16).Value = item.DamagePerUse;
@@ -48,6 +50,50 @@ namespace GameInv.Db {
             command.Parameters["@id"].Value = item.Id;
 
             return command.ExecuteNonQuery() == 1;
+        }
+
+        public bool UpdateItems(IEnumerable<Item> items) {
+            try {
+                items = items.ToArray();
+
+                using var connection = new MySqlConnection(ConnectionString);
+                connection.Open();
+
+                using var transaction = connection.BeginTransaction();
+                var command = connection.CreateCommand();
+                command.Transaction = transaction;
+
+                command.CommandText =
+                    "INSERT INTO items VALUES (@name, @damagePerTick, @damagePerUse, @durability, @id) ON DUPLICATE KEY UPDATE name=@name, damagePerTick=@damagePerTick, damagePerUse=@damagePerUse, durability=@durability";
+
+                command.Parameters.Add("@name", MySqlDbType.VarChar, 70);
+                command.Parameters.Add("@damagePerTick", MySqlDbType.UInt16);
+                command.Parameters.Add("@damagePerUse", MySqlDbType.UInt16);
+                command.Parameters.Add("@durability", MySqlDbType.UInt16);
+                command.Parameters.Add("@id", MySqlDbType.String, 36);
+
+                command.Prepare();
+
+                var updatedRows = 0;
+                try {
+                    foreach (var item in items) {
+                        command.Parameters["@name"].Value = item.Name;
+                        command.Parameters["@damagePerTick"].Value = item.DamagePerTick;
+                        command.Parameters["@damagePerUse"].Value = item.DamagePerUse;
+                        command.Parameters["@durability"].Value = item.Durability;
+                        command.Parameters["@id"].Value = item.Id;
+
+                        updatedRows += command.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+                } catch {
+                    transaction.Rollback();
+                    updatedRows = -1;
+                }
+
+                return updatedRows == items.Count();
+            } catch { return false;}
         }
 
         public bool RemoveItem(Item item) {

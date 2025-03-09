@@ -1,8 +1,9 @@
 using System.Text;
+using GameInv.Ws;
 using Pastel;
 
 namespace GameInv.ItemNS {
-    public class Item {
+    public class Item : ICloneable {
         public readonly ItemDurability? DamagePerTick;
         public readonly ItemDurability? DamagePerUse;
         public readonly string Id;
@@ -75,6 +76,10 @@ namespace GameInv.ItemNS {
             }
 
             return result.ToString();
+        }
+
+        public object Clone() {
+            return ItemData.Deserialize(((ItemData)this).Serialize()!)!;
         }
     }
 }
