@@ -127,9 +127,9 @@ namespace GameInv.Db {
         private static Item MapItem(MySqlDataReader reader) {
             return new(
                 (string)reader["name"],
-                GetNullableValue<ItemDurability>(reader["damagePerTick"]),
-                GetNullableValue<ItemDurability>(reader["damagePerUse"]),
-                GetNullableValue<ItemDurability>(reader["durability"]),
+                GetNullableValue<ushort>(reader["damagePerTick"]),
+                GetNullableValue<ushort>(reader["damagePerUse"]),
+                GetNullableValue<ushort>(reader["durability"]),
                 reader["id"].ToString()
             );
         }
