@@ -8,6 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <TrimmerRootAssembly Include="MySql.Data" />
+        <TrimmerRootAssembly Include="System.Configuration.ConfigurationManager" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="DotNetEnv" Version="3.1.1"/>
         <PackageReference Include="Fleck" Version="1.2.0"/>
         <PackageReference Include="MySql.Data" Version="9.2.0"/>
