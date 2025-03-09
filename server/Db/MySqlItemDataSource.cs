@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 
 namespace GameInv.Db {
     public class MySqlItemDataSource : IItemDataSource {
+        public string SourceName => "MySQL DB";
         public required string ConnectionString { get; init; }
 
         public IEnumerable<Item>? GetItems() {
