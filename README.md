@@ -31,9 +31,9 @@
 ### `.env`
 
 This program allows you to configure various options through the `.env` file or by setting environment variables. The
-.env file has to be placed in the same directory as the program executable. The [.env.example](server/.env.example) file
-provides a description for these settings, so read it. To use it, rename .env.example to .env and modify the values as
-needed. Note that environment variables set in the system or command line must be prefixed with `GAMEINV_`, but the .env
+`.env` file has to be placed in the same directory as the program executable. The [`.env.example`](server/.env.example) file
+provides a description for these settings, so read it. To use it, rename `.env.example` to `.env` and modify the values as
+needed. Note that environment variables set in the system or command line must be prefixed with `GAMEINV_`, but the `.env`
 file does not require this prefix.
 
 ### MySQL
