@@ -6,7 +6,7 @@ namespace GameInv.Db {
         string ConnectionString { get; init; }
 
         /// <returns>Items if successful, else null</returns>
-        public IEnumerable<Item>? GetItems();
+        public IEnumerable<Item>? GetItems(out string? errorMessage);
 
         /// <returns>Success</returns>
         public bool UpdateItem(Item item);

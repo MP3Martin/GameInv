@@ -6,7 +6,8 @@ namespace GameInv.Db {
         public string SourceName => "MySQL DB";
         public required string ConnectionString { get; init; }
 
-        public IEnumerable<Item>? GetItems() {
+        public IEnumerable<Item>? GetItems(out string? errorMessage) {
+            errorMessage = null;
             try {
                 using var connection = CreateAndOpenConnection();
 
@@ -22,7 +23,8 @@ namespace GameInv.Db {
                 }
 
                 return items;
-            } catch (MySqlException) {
+            } catch (MySqlException ex) {
+                errorMessage = ex.Message;
                 return null;
             }
         }

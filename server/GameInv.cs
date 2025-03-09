@@ -34,11 +34,12 @@ namespace GameInv {
         private void StartItemDataSource() {
             if (_itemDataSource is null) return;
 
-            var items = _itemDataSource.GetItems();
+            var items = _itemDataSource.GetItems(out var errorMessage);
             if (items is null) {
                 Console.Clear();
                 Console.WriteLine($"Couldn't get items from {_itemDataSource.SourceName}. " +
-                    $"Make sure everything is running and correctly set up.");
+                    $"Make sure everything is running and correctly set up.\n\n" +
+                    $"{errorMessage}");
                 Pause(newLine: true);
                 Environment.Exit(0);
             }
