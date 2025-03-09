@@ -19,7 +19,7 @@ namespace GameInv.InventoryNS {
 
         /// <returns>True if the item was successfully removed</returns>
         public bool RemoveItem(Item item, bool noLog = false);
-        /// <inheritdoc cref="RemoveItem(Item,bool)"/>
+        /// <inheritdoc cref="RemoveItem(Item,bool)" />
         public bool RemoveItem(string id, bool noLog = false);
 
         public int GetItemIndex(string id);

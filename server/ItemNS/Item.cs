@@ -1,5 +1,4 @@
 using System.Text;
-using GameInv.Ws;
 using Pastel;
 
 namespace GameInv.ItemNS {
@@ -24,6 +23,10 @@ namespace GameInv.ItemNS {
         public ItemDurability? Durability { get; private set; }
         public bool Usable => DamagePerUse is not null;
         public bool Decays => DamagePerTick is not null;
+
+        public object Clone() {
+            return ItemData.Deserialize(((ItemData)this).Serialize()!)!;
+        }
 
         /// <summary>
         ///     Use the item
@@ -76,10 +79,6 @@ namespace GameInv.ItemNS {
             }
 
             return result.ToString();
-        }
-
-        public object Clone() {
-            return ItemData.Deserialize(((ItemData)this).Serialize()!)!;
         }
     }
 }

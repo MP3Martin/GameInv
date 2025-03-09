@@ -5,110 +5,132 @@ namespace GameInv.Db {
     public class MySqlItemDataSource : IItemDataSource {
         public required string ConnectionString { get; init; }
 
-        public IEnumerable<Item> GetItems() {
-            using var connection = new MySqlConnection(ConnectionString);
-            connection.Open();
-            var command = connection.CreateCommand();
-            command.CommandText = "SELECT * FROM items";
-            using var data = command.ExecuteReader();
+        public IEnumerable<Item>? GetItems() {
+            try {
+                using var connection = CreateAndOpenConnection();
 
-            var result = new List<Item>();
-            while (data.Read()) {
-                var item = new Item(
-                    (string)data["name"],
-                    (ItemDurability)data["damagePerTick"],
-                    (ItemDurability)data["damagePerUse"],
-                    (ItemDurability)data["durability"],
-                    (string)data["id"]
-                );
-                result.Add(item);
+                using var command = connection.CreateCommand();
+                command.CommandText = "SELECT * FROM items";
+                command.Prepare();
+
+                using var reader = command.ExecuteReader();
+
+                var items = new List<Item>();
+                while (reader.Read()) {
+                    items.Add(MapItem(reader));
+                }
+
+                return items;
+            } catch (MySqlException) {
+                return null;
             }
-
-            return result;
         }
 
         public bool UpdateItem(Item item) {
-            using var connection = new MySqlConnection(ConnectionString);
-            connection.Open();
+            try {
+                using var connection = CreateAndOpenConnection();
 
-            var command = connection.CreateCommand();
+                using var command = CreateUpsertCommand(connection);
+                SetItemParameters(command, item);
 
-            command.CommandText =
-                "INSERT INTO items VALUES (@name, @damagePerTick, @damagePerUse, @durability, @id) ON DUPLICATE KEY UPDATE name=@name, damagePerTick=@damagePerTick, damagePerUse=@damagePerUse, durability=@durability";
-
-            command.Parameters.Add("@name", MySqlDbType.VarChar, 70).Value = item.Name;
-            command.Parameters.Add("@damagePerTick", MySqlDbType.UInt16).Value = item.DamagePerTick;
-            command.Parameters.Add("@damagePerUse", MySqlDbType.UInt16).Value = item.DamagePerUse;
-            command.Parameters.Add("@durability", MySqlDbType.UInt16).Value = item.Durability;
-            command.Parameters.Add("@id", MySqlDbType.String, 36).Value = item.Id;
-
-            command.Prepare();
-            command.Parameters["@name"].Value = item.Name;
-            command.Parameters["@damagePerTick"].Value = item.DamagePerTick;
-            command.Parameters["@damagePerUse"].Value = item.DamagePerUse;
-            command.Parameters["@durability"].Value = item.Durability;
-            command.Parameters["@id"].Value = item.Id;
-
-            return command.ExecuteNonQuery() == 1;
+                return command.ExecuteNonQuery() == 1;
+            } catch (MySqlException) {
+                return false;
+            }
         }
 
         public bool UpdateItems(IEnumerable<Item> items) {
             try {
                 items = items.ToArray();
 
-                using var connection = new MySqlConnection(ConnectionString);
-                connection.Open();
+                using var connection = CreateAndOpenConnection();
 
                 using var transaction = connection.BeginTransaction();
-                var command = connection.CreateCommand();
-                command.Transaction = transaction;
-
-                command.CommandText =
-                    "INSERT INTO items VALUES (@name, @damagePerTick, @damagePerUse, @durability, @id) ON DUPLICATE KEY UPDATE name=@name, damagePerTick=@damagePerTick, damagePerUse=@damagePerUse, durability=@durability";
-
-                command.Parameters.Add("@name", MySqlDbType.VarChar, 70);
-                command.Parameters.Add("@damagePerTick", MySqlDbType.UInt16);
-                command.Parameters.Add("@damagePerUse", MySqlDbType.UInt16);
-                command.Parameters.Add("@durability", MySqlDbType.UInt16);
-                command.Parameters.Add("@id", MySqlDbType.String, 36);
-
-                command.Prepare();
+                using var command = CreateUpsertCommand(connection, transaction);
 
                 var updatedRows = 0;
                 try {
                     foreach (var item in items) {
-                        command.Parameters["@name"].Value = item.Name;
-                        command.Parameters["@damagePerTick"].Value = item.DamagePerTick;
-                        command.Parameters["@damagePerUse"].Value = item.DamagePerUse;
-                        command.Parameters["@durability"].Value = item.Durability;
-                        command.Parameters["@id"].Value = item.Id;
-
+                        SetItemParameters(command, item);
                         updatedRows += command.ExecuteNonQuery();
                     }
 
                     transaction.Commit();
                 } catch {
                     transaction.Rollback();
-                    updatedRows = -1;
+                    throw;
                 }
 
                 return updatedRows == items.Count();
-            } catch { return false;}
+            } catch (MySqlException) {
+                return false;
+            }
         }
 
         public bool RemoveItem(Item item) {
-            using var connection = new MySqlConnection(ConnectionString);
+            try {
+                using var connection = CreateAndOpenConnection();
+
+                using var command = connection.CreateCommand();
+                command.CommandText = "DELETE FROM items WHERE id=@id";
+                command.Parameters.Add("@id", MySqlDbType.String, 36);
+                command.Prepare();
+                command.Parameters["@id"].Value = item.Id;
+
+                return command.ExecuteNonQuery() == 1;
+            } catch (MySqlException) {
+                return false;
+            }
+        }
+
+        private MySqlConnection CreateAndOpenConnection() {
+            var connection = new MySqlConnection(ConnectionString);
             connection.Open();
+            return connection;
+        }
 
+        private static Item MapItem(MySqlDataReader reader) {
+            return new(
+                (string)reader["name"],
+                (ItemDurability)reader["damagePerTick"],
+                (ItemDurability)reader["damagePerUse"],
+                (ItemDurability)reader["durability"],
+                (string)reader["id"]
+            );
+        }
+
+        private static MySqlCommand CreateUpsertCommand(MySqlConnection connection, MySqlTransaction? transaction = null) {
             var command = connection.CreateCommand();
+            if (transaction != null) command.Transaction = transaction;
 
-            command.CommandText = "DELETE FROM items WHERE id=@id";
-            command.Parameters.Add("@id", MySqlDbType.String, 36).Value = item.Id;
+            command.CommandText =
+                """
+                INSERT INTO items (name, damagePerTick, damagePerUse, durability, id)
+                VALUES (@name, @damagePerTick, @damagePerUse, @durability, @id)
+                ON DUPLICATE KEY UPDATE 
+                name=@name, damagePerTick=@damagePerTick, damagePerUse=@damagePerUse, durability=@durability
+                """;
 
+            AddItemParameters(command);
             command.Prepare();
-            command.Parameters["@id"].Value = item.Id;
 
-            return command.ExecuteNonQuery() == 1;
+            return command;
+        }
+
+        private static void AddItemParameters(MySqlCommand command) {
+            command.Parameters.Add("@name", MySqlDbType.VarChar, 70);
+            command.Parameters.Add("@damagePerTick", MySqlDbType.UInt16);
+            command.Parameters.Add("@damagePerUse", MySqlDbType.UInt16);
+            command.Parameters.Add("@durability", MySqlDbType.UInt16);
+            command.Parameters.Add("@id", MySqlDbType.String, 36);
+        }
+
+        private static void SetItemParameters(MySqlCommand command, Item item) {
+            command.Parameters["@name"].Value = item.Name;
+            command.Parameters["@damagePerTick"].Value = item.DamagePerTick;
+            command.Parameters["@damagePerUse"].Value = item.DamagePerUse;
+            command.Parameters["@durability"].Value = item.Durability;
+            command.Parameters["@id"].Value = item.Id;
         }
     }
 }
