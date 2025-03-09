@@ -22,12 +22,12 @@ namespace GameInv {
 
             Inventory = new Inventory(itemDataSource);
 
-            if (_clientConnectionHandler is not null) {
-                StartClientConnection();
-            }
-
             if (_itemDataSource is not null) {
                 StartItemDataSource();
+            }
+
+            if (_clientConnectionHandler is not null) {
+                StartClientConnection();
             }
         }
 
@@ -40,7 +40,7 @@ namespace GameInv {
                 Console.Clear();
                 Console.WriteLine($"Couldn't get items from {_itemDataSource.SourceName}. " +
                     $"Make sure everything is running and correctly set up.\n\n" +
-                    $"{errorMessage}");
+                    $"Error: {errorMessage}");
                 Pause(newLine: true);
                 Environment.Exit(0);
             }
