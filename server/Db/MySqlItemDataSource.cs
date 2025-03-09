@@ -12,7 +12,7 @@ namespace GameInv.Db {
                 using var connection = CreateAndOpenConnection();
 
                 using var command = connection.CreateCommand();
-                command.CommandText = "SELECT * FROM items";
+                command.CommandText = "SELECT * FROM items ORDER BY sortOrder";
                 command.Prepare();
 
                 using var reader = command.ExecuteReader();
@@ -36,7 +36,7 @@ namespace GameInv.Db {
                 using var command = CreateUpsertCommand(connection);
                 SetItemParameters(command, item);
 
-                return command.ExecuteNonQuery() == 1;
+                return command.ExecuteNonQuery() is 1 or 2;
             } catch (MySqlException) {
                 return false;
             }
@@ -51,11 +51,11 @@ namespace GameInv.Db {
                 using var transaction = connection.BeginTransaction();
                 using var command = CreateUpsertCommand(connection, transaction);
 
-                var updatedRows = 0;
+                var okRows = 0;
                 try {
                     foreach (var item in items) {
                         SetItemParameters(command, item);
-                        updatedRows += command.ExecuteNonQuery();
+                        okRows += command.ExecuteNonQuery() is 1 or 2 ? 1 : 0;
                     }
 
                     transaction.Commit();
@@ -64,7 +64,7 @@ namespace GameInv.Db {
                     throw;
                 }
 
-                return updatedRows == items.Count();
+                return okRows == items.Count();
             } catch (MySqlException) {
                 return false;
             }

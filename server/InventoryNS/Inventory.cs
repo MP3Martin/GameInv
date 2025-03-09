@@ -123,8 +123,7 @@ namespace GameInv.InventoryNS {
             if (index == -1) return false;
 
             if (ItemDataSource is not null) {
-                var result = ItemDataSource.RemoveItem(_items[index]);
-                if (!result) {
+                if (!ItemDataSource.RemoveItem(_items[index])) {
                     Log.Error($"Failed to remove item from {ItemDataSource.SourceName}, undoing.");
                     return false;
                 }
@@ -147,13 +146,9 @@ namespace GameInv.InventoryNS {
             var index = GetItemIndex(item.Id);
             if (index == -1) return false;
 
-
             if (ItemDataSource is not null) {
-                var oldItem = (Item)item.Clone();
-
-                if (!ItemDataSource.UpdateItem(_items[index])) {
+                if (!ItemDataSource.UpdateItem(item)) {
                     Log.Error($"Failed to save modified item to {ItemDataSource.SourceName}, undoing.");
-                    _items[index] = oldItem;
                     return false;
                 }
             }
