@@ -2,6 +2,8 @@ name: Build and Publish .NET release assets
 
 env:
   PROJECT_DIR: ./server
+  LINUX_ASSET: GameInv-server-${{ github.ref_name }}-Linux-x64
+  WINDOWS_ASSET: GameInv-server-${{ github.ref_name }}-Windows-x64.exe
 
 permissions:
   contents: write
@@ -35,14 +37,14 @@ jobs:
 
       - name: Rename Assets
         run: |
-          cd bin/publish/linux-x64 && mv GameInv GameInv-${{ github.ref_name }}-Linux-x64
-          cd ../win-x64 && mv GameInv.exe GameInv-${{ github.ref_name }}-Windows-x64.exe
+          cd bin/publish/linux-x64 && mv GameInv ${{ env.LINUX_ASSET }}
+          cd ../win-x64 && mv GameInv.exe ${{ env.WINDOWS_ASSET }}
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            ${{ env.PROJECT_DIR }}/bin/publish/linux-x64/GameInv-${{ github.ref_name }}-Linux-x64
-            ${{ env.PROJECT_DIR }}/bin/publish/win-x64/GameInv-${{ github.ref_name }}-Windows-x64.exe
+            ${{ env.PROJECT_DIR }}/bin/publish/linux-x64/${{ env.LINUX_ASSET }}
+            ${{ env.PROJECT_DIR }}/bin/publish/win-x64/${{ env.WINDOWS_ASSET }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
