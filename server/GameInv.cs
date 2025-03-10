@@ -23,7 +23,7 @@ namespace GameInv {
             Inventory = new Inventory(itemDataSource);
 
             if (_itemDataSource is not null) {
-                StartItemDataSource();
+                InitializeItemDataSource();
             }
 
             if (_clientConnectionHandler is not null) {
@@ -31,7 +31,7 @@ namespace GameInv {
             }
         }
 
-        private void StartItemDataSource() {
+        private void InitializeItemDataSource() {
             if (_itemDataSource is null) return;
 
             var items = _itemDataSource.GetItems(out var errorMessage);
