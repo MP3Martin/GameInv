@@ -8,8 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <TrimmerRootAssembly Include="MySql.Data" />
-        <TrimmerRootAssembly Include="System.Configuration.ConfigurationManager" />
+        <TrimmerRootAssembly Include="MySql.Data"/>
+        <TrimmerRootAssembly Include="System.Configuration.ConfigurationManager"/>
     </ItemGroup>
 
     <ItemGroup>

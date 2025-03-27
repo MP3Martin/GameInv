@@ -42,7 +42,7 @@ namespace GameInv {
                     $"Make sure everything is running and correctly set up.\n\n" +
                     $"Error: {errorMessage}");
                 Pause(newLine: true);
-                Environment.Exit(0);
+                Environment.Exit(1);
             }
 
             items = items.ToArray();

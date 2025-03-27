@@ -39,7 +39,7 @@ namespace GameInv {
                     $"No DB connection string set.\n" +
                     $"Set it using DB_CONNECTION_STRING in .env file or using the {EnvPrefix}DB_CONNECTION_STRING environment variable.");
                 Pause(newLine: true);
-                Environment.Exit(0);
+                Environment.Exit(1);
             }
 
             IItemDataSource? itemDataSource = useDb
@@ -81,6 +81,7 @@ namespace GameInv {
                     );
                 } catch (Exception e) {
                     Log.Error(e.ToString());
+                    Environment.Exit(1);
                 }
             } else /* Console UI */ {
                 Log.LogLevel = LogLevel.Fatal; // Disable logging
