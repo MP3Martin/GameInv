@@ -1,9 +1,0 @@
-<UserControl x:Class="GameInv_WPF.WPF.Controls.IconTextControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern">
-    <StackPanel Orientation="Horizontal">
-        <ui:FontIcon Icon="{Binding Icon}" Margin="0 1 10 0" />
-        <TextBlock Text="{Binding Text}" VerticalAlignment="Center" />
-    </StackPanel>
-</UserControl>

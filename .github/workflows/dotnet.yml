@@ -8,7 +8,7 @@ permissions:
 
 on:
   release:
-    types: [created]
+    types: [ created ]
 
 jobs:
   publish:
@@ -19,30 +19,37 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 9
 
       - name: Publish Linux
         run: |
-          dotnet publish -p:PublishProfile=FolderProfile-Linux.pubxml
+          dotnet publish GameInv -p:PublishProfile=FolderProfile-Linux.pubxml
 
       - name: Publish Windows
         run: |
-          dotnet publish -p:PublishProfile=FolderProfile-Windows.pubxml
+          dotnet publish GameInv -p:PublishProfile=FolderProfile-Windows.pubxml
 
-      - name: Rename Assets
+      - name: Publish Windows WPF
         run: |
-          cd bin/publish/linux-x64 && mv GameInv GameInv-${{ github.ref_name }}-Linux-x64
-          cd ../win-x64 && mv GameInv.exe GameInv-${{ github.ref_name }}-Windows-x64.exe
+          dotnet publish GameInv-WPF -p:PublishProfile=FolderProfile-Windows.pubxml
+
+      - name: Rename And Move Assets
+        run: |
+          ORIGINAL_DIR=$(pwd)
+          mkdir release_files
+          
+          mv GameInv/bin/publish/linux-x64/GameInv release_files/GameInv-${{ github.ref_name }}-Linux-x64
+          mv GameInv/bin/publish/win-x64/GameInv.exe release_files/GameInv-${{ github.ref_name }}-Windows-x64.exe
+          mv GameInv-WPF/bin/publish/win-x64/GameInv-WPF.exe release_files/GameInv-WPF-${{ github.ref_name }}-Windows-x64.exe
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            ${{ env.PROJECT_DIR }}/bin/publish/linux-x64/GameInv-${{ github.ref_name }}-Linux-x64
-            ${{ env.PROJECT_DIR }}/bin/publish/win-x64/GameInv-${{ github.ref_name }}-Windows-x64.exe
+            ${{ env.PROJECT_DIR }}/release_files/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
