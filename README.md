@@ -44,8 +44,13 @@ tables (find a tutorial elsewhere). Then [configure](#configuration) your progra
 
 ## GUI
 
-There is also an unmaintained WPF version of the project in [server-wpf-unmaintained](server-wpf-unmaintained), read
-more info in its [README.md](server-wpf-unmaintained/README.md)
+There is also a WPF GUI version of the project in [server/GameInv-WPF](server/GameInv-WPF). It only supports Windows 7+
+and no
+other OS. Tested on Windows 11. That version does not have a WebSocket client, does not have TUI and only has an
+integrated WPF GUI with optional DB connection. The usage is the same as in [usage](#usage), but skip steps 3 and 5. If
+you want to download a prebuilt `.exe`, then find the one that has `WPF` in its
+name [in the latest release](https://github.com/MP3Martin/GameInv/releases/latest/).
 
 ## More docs
+
 Can be found [here](DOCS.md)

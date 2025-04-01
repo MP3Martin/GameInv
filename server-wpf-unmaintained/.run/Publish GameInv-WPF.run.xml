@@ -1,6 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Publish GameInv-WPF" type="DotNetFolderPublish" factoryName="Publish to folder">
-    <riderPublish configuration="Release" delete_existing_files="true" include_all_content_for_self_extract="true" include_native_libs_for_self_extract="true" platform="Any CPU" produce_single_file="true" runtime="win-x64" self_contained="true" target_folder="$PROJECT_DIR$/bin/Release/net9.0-windows/publish" target_framework="net9.0-windows" uuid_high="-3122299451299642990" uuid_low="-7617881898982934568" />
-    <method v="2" />
-  </configuration>
-</component>

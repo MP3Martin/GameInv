@@ -1,0 +1,57 @@
+﻿<Window x:Class="GameInv_WPF.Dialogs.ItemEditDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Width="250"
+        SizeToContent="Height" ResizeMode="NoResize"
+        Closing="Window_Closing"
+        xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+        xmlns:controls="clr-namespace:GameInv_WPF.Controls"
+        ui:WindowHelper.UseModernWindowStyle="True">
+    <Window.Resources>
+        <Style x:Key="ItemDurabilityNumberBoxStyle" TargetType="ui:NumberBox">
+            <Setter Property="Minimum" Value="0" />
+            <Setter Property="Maximum" Value="65535" />
+            <Setter Property="AcceptsExpression" Value="False" />
+            <Setter Property="SpinButtonPlacementMode" Value="Inline" />
+            <Setter Property="SmallChange" Value="10" />
+            <Setter Property="LargeChange" Value="100" />
+            <Setter Property="PlaceholderText" Value="0-65535" />
+        </Style>
+    </Window.Resources>
+
+    <StackPanel Orientation="Vertical" Margin="4 0 4 4">
+        <Border Style="{StaticResource CardStyle}" Margin="0">
+            <StackPanel Orientation="Vertical">
+                <TextBox x:Name="NameTextBox" ui:ControlHelper.Header="Name:" Margin="0 0 0 5" />
+                <ui:NumberBox x:Name="DamagePerTickNumberBox"
+                              Style="{StaticResource ItemDurabilityNumberBoxStyle}"
+                              ui:ControlHelper.Header="Damage per tick:" Margin="0 0 0 5" />
+
+                <ui:NumberBox x:Name="DamagePerUseNumberBox"
+                              Style="{StaticResource ItemDurabilityNumberBoxStyle}"
+                              ui:ControlHelper.Header="Damage per use:" Margin=" 0 0 0 5" />
+
+                <ui:NumberBox x:Name="DurabilityNumberBox"
+                              Style="{StaticResource ItemDurabilityNumberBoxStyle}"
+                              ui:ControlHelper.Header="Durability:" />
+            </StackPanel>
+        </Border>
+        <Border Style="{StaticResource CardStyle}" Margin="0 5 0 0" VerticalAlignment="Bottom"
+                HorizontalAlignment="Stretch">
+            <UniformGrid Columns="2">
+                <Button x:Name="CancelButton" Click="CancelButton_OnClick" HorizontalAlignment="Stretch"
+                        Margin="0,0,5,0" Padding="5">
+                    <controls:IconTextControl Icon="{x:Static ui:SegoeFluentIcons.Cancel}" Text="Cancel" />
+                </Button>
+                <Button x:Name="SaveButton" Click="SaveButton_OnClick" HorizontalAlignment="Stretch"
+                        Margin="5,0,0,0" Padding="5"
+                        Style="{DynamicResource {x:Static ui:ThemeKeys.AccentButtonStyleKey}}">
+                    <controls:IconTextControl Icon="{x:Static ui:SegoeFluentIcons.Save}" Text="Save" />
+                </Button>
+            </UniformGrid>
+        </Border>
+    </StackPanel>
+</Window>
