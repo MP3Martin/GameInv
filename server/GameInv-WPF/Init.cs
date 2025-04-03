@@ -5,10 +5,8 @@ global using static GameInv.UtilsNS.Utils;
 using System.Runtime.InteropServices;
 using System.Windows;
 using GameInv_WPF.UtilsNS;
-using GameInv.Db;
 using Pastel;
 using Sherlog;
-using IItemDataSource = GameInv.Db.IItemDataSource;
 
 namespace GameInv_WPF {
     public static class Init {
@@ -55,11 +53,7 @@ namespace GameInv_WPF {
                 Environment.Exit(1);
             }
 
-            IItemDataSource? itemDataSource = (bool)useDb
-                ? new MySqlItemDataSource {
-                    ConnectionString = dbConnectionString!
-                }
-                : null;
+            var itemDataSource = (bool)useDb ? CreateItemDataSource(dbConnectionString!) : null;
 
             Log.Info($"Creating a new instance of {nameof(GameInv).Pastel(Highlight)}...");
 

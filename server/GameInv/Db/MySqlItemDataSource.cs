@@ -3,8 +3,8 @@ using MySql.Data.MySqlClient;
 
 namespace GameInv.Db {
     public class MySqlItemDataSource : IItemDataSource {
-        public string SourceName => "MySQL DB";
         public required string ConnectionString { get; init; }
+        public string SourceName => "MySQL DB";
 
         public IEnumerable<Item>? GetItems(out string? errorMessage) {
             errorMessage = null;

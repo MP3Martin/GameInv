@@ -3,7 +3,6 @@ using GameInv.ItemNS;
 namespace GameInv.Db {
     public interface IItemDataSource {
         public string SourceName { get; }
-        string ConnectionString { get; init; }
 
         /// <returns>Items if successful, else null</returns>
         public IEnumerable<Item>? GetItems(out string? errorMessage);

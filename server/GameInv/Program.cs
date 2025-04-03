@@ -5,7 +5,6 @@ global using static GameInv.UtilsNS.Consts.Colors;
 global using static GameInv.UtilsNS.Utils;
 global using static GameInv.Ws.MessageDataTools;
 using GameInv.ConsoleUiNS;
-using GameInv.Db;
 using GameInv.UtilsNS.ErrorPresenterNS;
 using GameInv.Ws;
 using Pastel;
@@ -41,11 +40,7 @@ namespace GameInv {
                 Environment.Exit(1);
             }
 
-            IItemDataSource? itemDataSource = useDb
-                ? new MySqlItemDataSource {
-                    ConnectionString = dbConnectionString!
-                }
-                : null;
+            var itemDataSource = useDb ? CreateItemDataSource(dbConnectionString!) : null;
 
             if (useWsServer) {
                 InitLogger();

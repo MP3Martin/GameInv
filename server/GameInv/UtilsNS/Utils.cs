@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Reflection;
 using GameInv.ConsoleUiNS;
 using GameInv.ConsoleUiNS.Menus.SimpleMenus;
+using GameInv.Db;
 using GameInv.ItemNS;
 using Pastel;
 using Color = System.Drawing.Color;
@@ -169,6 +170,15 @@ namespace GameInv.UtilsNS {
             var constructor = new StackTrace().GetFrame(2)!.GetMethod()!;
             var classType = constructor.DeclaringType!;
             return classType;
+        }
+
+        /// <summary>
+        ///     Modify to change the IItemDataSource implementation
+        /// </summary>
+        public static IItemDataSource CreateItemDataSource(string dbConnectionString) {
+            return new MySqlItemDataSource {
+                ConnectionString = dbConnectionString
+            };
         }
 
         public class RefreshableObservableCollection<T> : ObservableCollection<T> {
