@@ -1,12 +1,13 @@
 using System.Collections;
-using GameInv.Db;
+using GameInv.DataSource;
 using GameInv.ItemNS;
 
 namespace GameInv.InventoryNS {
     public class Inventory(IItemDataSource? itemDataSource = null) : IInventory {
         private static readonly Logger Log = GetLogger();
         private readonly RefreshableObservableCollection<Item> _items = [];
-        public IItemDataSource? ItemDataSource { get; } = itemDataSource;
+
+        private IItemDataSource? ItemDataSource { get; } = itemDataSource;
 
         public IReadOnlyList<Item> Items => _items;
 

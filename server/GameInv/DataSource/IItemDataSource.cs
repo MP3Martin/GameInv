@@ -1,6 +1,6 @@
 using GameInv.ItemNS;
 
-namespace GameInv.Db {
+namespace GameInv.DataSource {
     public interface IItemDataSource {
         public string SourceName { get; }
 

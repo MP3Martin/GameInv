@@ -1,10 +1,10 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Reflection;
-using GameInv.ConsoleUiNS;
 using GameInv.ConsoleUiNS.Menus.SimpleMenus;
-using GameInv.Db;
+using GameInv.DataSource;
 using GameInv.ItemNS;
+using GameInv.UtilsNS.ErrorPresenter;
 using Pastel;
 using Color = System.Drawing.Color;
 
@@ -66,11 +66,7 @@ namespace GameInv.UtilsNS {
         /// </summary>
         public static void ClearAll() {
             Console.Clear();
-            Console.Write("\x1b[3J");
-        }
-
-        public static void ShowMenu<T>() where T : IMenu, new() {
-            new T().Show();
+            Console.Write("\e[3J");
         }
 
         public static void ShowInfo(string message) {
@@ -172,13 +168,25 @@ namespace GameInv.UtilsNS {
             return classType;
         }
 
-        /// <summary>
-        ///     Modify to change the IItemDataSource implementation
-        /// </summary>
-        public static IItemDataSource CreateItemDataSource(string dbConnectionString) {
-            return new MySqlItemDataSource {
-                ConnectionString = dbConnectionString
+        public static IItemDataSource? CreateItemDataSource(GameInv gameInv) {
+            return (MyEnv.GetString("STORAGE_TYPE") ?? "").ToLower() switch {
+                "mysql" => new MySqlItemDataSource(MyEnv.GetString("DB_CONNECTION_STRING") ?? ""),
+                "json" => new JsonItemDataSource(gameInv),
+                _ => null
             };
+        }
+
+        public static void CheckDbConnectionString(IErrorPresenter errorPresenter) {
+            var useDb = MyEnv.GetBool("USE_DB") ?? false;
+            // ReSharper disable once InvertIf
+            if (useDb && string.IsNullOrEmpty(MyEnv.GetString("DB_CONNECTION_STRING"))) {
+                errorPresenter.Present(string.Format(Errors.NoDbConnectionString, EnvPrefix));
+                Environment.Exit(1);
+            }
+        }
+
+        public static string FormatException(Exception exception) {
+            return $"Error: {exception.GetType().FullName}: {exception.Message}";
         }
 
         public class RefreshableObservableCollection<T> : ObservableCollection<T> {
@@ -187,6 +195,24 @@ namespace GameInv.UtilsNS {
                 if (index < 0) return;
                 RemoveAt(index);
                 Insert(index, item);
+            }
+        }
+
+        public class ResettableCountdownTimer(Action callback, int interval) {
+            private CancellationTokenSource? _cts;
+
+            public void Reset() {
+                _cts?.Cancel();
+                _cts = new();
+                var cancellationToken = _cts.Token;
+
+                // ReSharper disable once MethodSupportsCancellation
+                Task.Run(async () => {
+                    try {
+                        await Task.Delay(interval, cancellationToken);
+                        callback();
+                    } catch (TaskCanceledException) { }
+                });
             }
         }
 
@@ -205,7 +231,7 @@ namespace GameInv.UtilsNS {
         /// <returns>If value was converted successfully, true; otherwise false.</returns>
         private static bool TryParse<T>(string value, out T result) where T : struct {
             var tryParseMethod = typeof(T).GetMethod("TryParse", BindingFlags.Static | BindingFlags.Public, null,
-                new[] { typeof(string), typeof(T).MakeByRefType() }, null);
+                [typeof(string), typeof(T).MakeByRefType()], null);
             var parameters = new object[] { value, null! };
 
             var retVal = (bool)tryParseMethod!.Invoke(null, parameters)!;

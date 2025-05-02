@@ -1,6 +1,6 @@
-using GameInv.Db;
+using GameInv.DataSource;
 using GameInv.InventoryNS;
-using GameInv.UtilsNS.ErrorPresenterNS;
+using GameInv.UtilsNS.ErrorPresenter;
 using GameInv.Ws;
 using Pastel;
 
@@ -11,19 +11,17 @@ namespace GameInv {
     public class GameInv {
         private static readonly Logger Log = GetLogger();
         private readonly IConnectionHandler? _clientConnectionHandler;
-        private readonly IErrorPresenter _errorPresenter;
         private readonly IItemDataSource? _itemDataSource;
+        public readonly IErrorPresenter ErrorPresenter;
         public readonly IInventory Inventory;
 
-        /// <summary>
-        ///     The <i>"main"</i> class
-        /// </summary>
-        public GameInv(IErrorPresenter errorPresenter, IConnectionHandler? clientConnectionHandler = null, IItemDataSource? itemDataSource = null) {
+        public GameInv(IErrorPresenter errorPresenter, IConnectionHandler? clientConnectionHandler = null) {
             _clientConnectionHandler = clientConnectionHandler;
-            _itemDataSource = itemDataSource;
-            _errorPresenter = errorPresenter;
+            ErrorPresenter = errorPresenter;
 
-            Inventory = new Inventory(itemDataSource);
+            _itemDataSource = CreateItemDataSource(this);
+
+            Inventory = new Inventory(_itemDataSource);
 
             if (_itemDataSource is not null) {
                 InitializeItemDataSource();
@@ -39,9 +37,8 @@ namespace GameInv {
 
             var items = _itemDataSource.GetItems(out var errorMessage);
             if (items is null) {
-                _errorPresenter.Present($"Couldn't get items from {_itemDataSource.SourceName}. " +
-                    $"Make sure everything is running and correctly set up.\n\n" +
-                    $"Error: {errorMessage}", pause: true);
+                ErrorPresenter.Present($"Couldn't get items from {_itemDataSource.SourceName}. " +
+                    $"Make sure everything is running and correctly set up.\n\n{errorMessage}", true);
                 Environment.Exit(1);
             }
 

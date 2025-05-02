@@ -6,11 +6,14 @@ namespace GameInv.Ws {
     /// <inheritdoc />
     public class WsConnectionHandler : IConnectionHandler {
         private static readonly Logger Log = GetLogger();
-        private static readonly ConcurrentDictionary<Guid, WebSocketConnectionInterfaceWrapper> AllSockets = new();
+        private readonly ConcurrentDictionary<Guid, WebSocketConnectionInterfaceWrapper> _allSockets = new();
         private readonly AutoResetEvent _sleepUntilStopped = new(false);
 
         private GameInv _gameInv = null!;
         private WebSocketServer _server = null!;
+
+        private string SocketInfo => $"({_allSockets.Count} total)";
+
         /// <remarks>
         ///     Only call this once per instance
         /// </remarks>
@@ -29,8 +32,8 @@ namespace GameInv.Ws {
                 // Only use _socket in pre-auth
                 var socket = new WebSocketConnectionInterfaceWrapper(_socket);
                 _socket.OnOpen = () => {
-                    if (!AllSockets.TryAdd(socket.ConnectionInfo.Id, socket)) return;
-                    Log.Info($"Socket {socket.ConnectionInfo.Id} connected");
+                    if (!_allSockets.TryAdd(socket.ConnectionInfo.Id, socket)) return;
+                    Log.Info($"Socket {socket.ConnectionInfo.Id} connected " + SocketInfo);
 
                     // Set a timeout to disconnect if no auth received
                     Task.Run(async () => {
@@ -40,8 +43,8 @@ namespace GameInv.Ws {
                     });
                 };
                 _socket.OnClose = () => {
-                    if (AllSockets.TryRemove(socket.ConnectionInfo.Id, out _)) {
-                        Log.Info($"Socket {socket.ConnectionInfo.Id} disconnected");
+                    if (_allSockets.TryRemove(socket.ConnectionInfo.Id, out _)) {
+                        Log.Info($"Socket {socket.ConnectionInfo.Id} disconnected " + SocketInfo);
                     }
                 };
                 _socket.OnMessage = message => {
@@ -69,7 +72,7 @@ namespace GameInv.Ws {
         public void Stop() {
             _gameInv.Inventory.ItemsChanged -= SendItems;
 
-            foreach (var socket in AllSockets.Values) {
+            foreach (var socket in _allSockets.Values) {
                 socket.Send(EncodeMessage("disconnect", null, "Server closed"));
                 socket.Close();
             }
@@ -103,7 +106,7 @@ namespace GameInv.Ws {
         }
 
         private void SendItems() {
-            foreach (var socket in AllSockets.Values) {
+            foreach (var socket in _allSockets.Values) {
                 SendItems(socket);
             }
         }
