@@ -17,7 +17,7 @@ export default function EditItemButton ({ item }) {
   return (
     <>
       <MyTooltip content="Edit item">
-        <Button isIconOnly variant={'light'} onClick={onOpen}>
+        <Button isIconOnly variant={'light'} onPress={onOpen}>
           <IconEdit className="text-default-500" size={28} />
         </Button>
       </MyTooltip>

@@ -23,6 +23,10 @@ namespace GameInv_WPF.Windows.MainWindow {
             Items = (ObservableCollection<Item>)_gameInv.Inventory.Items;
 
             DataContext = this;
+
+            Closing += (_, _) => {
+                _gameInv.OnClosing();
+            };
         }
 
         public ObservableCollection<Item> Items { get; } = null!;

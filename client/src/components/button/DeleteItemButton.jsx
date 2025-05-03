@@ -18,7 +18,7 @@ export default function DeleteItemButton ({ item }) {
   return (
     <>
       <Tooltip showArrow content="Delete item" placement="bottom">
-        <Button isIconOnly color="danger" onClick={onOpen}><IconTrash /></Button>
+        <Button isIconOnly color="danger" onPress={onOpen}><IconTrash /></Button>
       </Tooltip>
       <DeleteItemModal isOpen={isOpen} item={item} onClose={onClose} onOpenChange={onOpenChange} />
     </>

@@ -17,7 +17,7 @@ export default function SettingsButton ({ tooltipPlacement = 'bottom' }) {
   return (
     <>
       <MyTooltip content="Settings" placement={tooltipPlacement}>
-        <Button isIconOnly size={'md'} variant={'light'} onClick={onOpen}>
+        <Button isIconOnly size={'md'} variant={'light'} onPress={onOpen}>
           <IconSettings className="text-default-500" size={28} />
         </Button>
       </MyTooltip>

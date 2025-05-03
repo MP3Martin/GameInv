@@ -15,7 +15,7 @@ export default function SimulateTimeButton () {
 
   return (
     <>
-      <Button color={'secondary'} startContent={<IconClock />} onClick={() => {
+      <Button color={'secondary'} startContent={<IconClock />} onPress={() => {
         onOpen();
       }}>Simulate time</Button>
       <SimulateTimeModal isOpen={isOpen} onClose={onClose} onOpenChange={onOpenChange} />

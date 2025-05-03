@@ -23,7 +23,7 @@ export default function UseItemButton ({ item }) {
     <>
       <MyTooltip content="Use item">
         <Button isIconOnly isDisabled={locked || (item.damagePerUse == null)} isLoading={locked} variant={'light'}
-                onClick={() => {
+                onPress={() => {
                   _useItem(item);
                 }}><IconPick className="text-default-500" size={28} /></Button>
       </MyTooltip>

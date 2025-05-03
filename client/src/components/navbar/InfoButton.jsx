@@ -50,7 +50,7 @@ export default function InfoButton ({ tooltipPlacement = 'bottom' }) {
         </div>
       </div>
     } isOpen={isOpen} popoverPlacement={'bottom-end'} title="Info" tooltipPlacement={tooltipPlacement} trigger={
-      <Button isIconOnly size={'md'} variant={'light'} onClick={() => isOpen ? onClose : onOpen}>
+      <Button isIconOnly size={'md'} variant={'light'} onPress={() => isOpen ? onClose : onOpen}>
         <IconInfoCircle className="text-default-500" size={28} />
       </Button>
     } onOpenChange={onOpenChange} />

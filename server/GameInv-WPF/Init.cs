@@ -1,9 +1,7 @@
 ﻿global using static GameInv_WPF.UtilsNS.Utils;
-global using static GameInv.UtilsNS.Consts;
 global using static GameInv.UtilsNS.Consts.Colors;
 global using static GameInv.UtilsNS.Utils;
 using System.Runtime.InteropServices;
-using System.Windows;
 using GameInv_WPF.UtilsNS;
 using Pastel;
 using Sherlog;
@@ -23,46 +21,14 @@ namespace GameInv_WPF {
             InitLogger();
             Log.Info("Starting...");
 
-            var useDb = MyEnv.GetBool("USE_DB");
-            if (useDb is null) {
-                switch (MessageBox.Show("Use database?",
-                            "Question", MessageBoxButton.YesNoCancel)) {
-                    case MessageBoxResult.Cancel or MessageBoxResult.None:
-                    {
-                        Environment.Exit(0);
-                        break;
-                    }
-                    case MessageBoxResult.Yes or MessageBoxResult.OK:
-                    {
-                        useDb = true;
-                        break;
-                    }
-                    case MessageBoxResult.No:
-                    {
-                        useDb = false;
-                        break;
-                    }
-                }
-
-                useDb ??= null!;
-            }
-
-            var dbConnectionString = MyEnv.GetString("DB_CONNECTION_STRING");
-            if ((bool)useDb && dbConnectionString is null) {
-                ErrorPresenter.Present(string.Format(Errors.NoDbConnectionString, EnvPrefix)); // TODO: try setting typeof clasnane
-                Environment.Exit(1);
-            }
-
-            var itemDataSource = (bool)useDb ? CreateItemDataSource(dbConnectionString!) : null;
+            CheckDbConnectionString(ErrorPresenter);
 
             Log.Info($"Creating a new instance of {nameof(GameInv).Pastel(Highlight)}...");
 
             try {
-                return new(ErrorPresenter, itemDataSource: itemDataSource);
+                return new(ErrorPresenter);
             } catch (Exception e) {
-                var msg = e.ToString();
-                Log.Error(msg);
-                ShowErrorMessageBox(msg);
+                ErrorPresenter.Present(e.ToString());
                 Environment.Exit(1);
             }
 

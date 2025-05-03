@@ -15,7 +15,7 @@ export default function AddItemButton () {
 
   return (
     <>
-      <Button color={'primary'} startContent={<IconPlus />} onClick={() => {
+      <Button color={'primary'} startContent={<IconPlus />} onPress={() => {
         onOpen();
       }}>Add an item</Button>
       <ModifyItemModal isOpen={isOpen} onClose={onClose} onOpenChange={onOpenChange} />

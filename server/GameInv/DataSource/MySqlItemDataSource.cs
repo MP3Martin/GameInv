@@ -1,9 +1,8 @@
 using GameInv.ItemNS;
 using MySql.Data.MySqlClient;
 
-namespace GameInv.Db {
-    public class MySqlItemDataSource : IItemDataSource {
-        public required string ConnectionString { get; init; }
+namespace GameInv.DataSource {
+    public class MySqlItemDataSource(string connectionString) : IItemDataSource {
         public string SourceName => "MySQL DB";
 
         public IEnumerable<Item>? GetItems(out string? errorMessage) {
@@ -24,7 +23,7 @@ namespace GameInv.Db {
 
                 return items;
             } catch (MySqlException ex) {
-                errorMessage = ex.Message;
+                errorMessage = FormatException(ex);
                 return null;
             }
         }
@@ -119,7 +118,7 @@ namespace GameInv.Db {
         }
 
         private MySqlConnection CreateAndOpenConnection() {
-            var connection = new MySqlConnection(ConnectionString);
+            var connection = new MySqlConnection(connectionString);
             connection.Open();
             return connection;
         }

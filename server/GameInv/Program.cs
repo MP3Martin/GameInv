@@ -5,7 +5,7 @@ global using static GameInv.UtilsNS.Consts.Colors;
 global using static GameInv.UtilsNS.Utils;
 global using static GameInv.Ws.MessageDataTools;
 using GameInv.ConsoleUiNS;
-using GameInv.UtilsNS.ErrorPresenterNS;
+using GameInv.UtilsNS.ErrorPresenter;
 using GameInv.Ws;
 using Pastel;
 
@@ -17,30 +17,15 @@ namespace GameInv {
         public static void Main(string[] args) {
             MyEnv.LoadEnv();
 
-            var envUseWsServer = MyEnv.GetBool("USE_WS_SERVER");
-            var useWsServer = envUseWsServer ??
+            var useWsServer = MyEnv.GetBool("USE_WS_SERVER") ??
                 YesNoInput(
                     "Use WebSocket server",
                     "Use console UI",
                     true
                 );
-
-            if (envUseWsServer is null) Console.WriteLine();
-            var useDb = MyEnv.GetBool("USE_DB") ??
-                YesNoInput(
-                    "Use MySQL DB",
-                    "Don't use DB (will lose state on exit)",
-                    true
-                );
             ClearAll();
 
-            var dbConnectionString = MyEnv.GetString("DB_CONNECTION_STRING");
-            if (useDb && dbConnectionString is null) {
-                ErrorPresenter.Present(string.Format(Errors.NoDbConnectionString, EnvPrefix), pause: true);
-                Environment.Exit(1);
-            }
-
-            var itemDataSource = useDb ? CreateItemDataSource(dbConnectionString!) : null;
+            CheckDbConnectionString(ErrorPresenter);
 
             if (useWsServer) {
                 InitLogger();
@@ -48,19 +33,19 @@ namespace GameInv {
                 Log.Info($"Creating a new instance of {nameof(GameInv).Pastel(Highlight)}...");
 
                 try {
-                    _ = new GameInv(ErrorPresenter, new WsConnectionHandler(),
-                        itemDataSource
-                    );
+                    _ = new GameInv(ErrorPresenter, new WsConnectionHandler());
                 } catch (Exception e) {
-                    Log.Error(e.ToString());
+                    ErrorPresenter.Present(e.ToString());
                     Environment.Exit(1);
                 }
             } else /* Console UI */ {
                 Log.LogLevel = LogLevel.Fatal; // Disable logging
 
-                var gameInv = new GameInv(ErrorPresenter, itemDataSource: itemDataSource);
+                var gameInv = new GameInv(ErrorPresenter);
 
                 new ConsoleUi().Start(gameInv);
+
+                gameInv.OnClosing();
                 Environment.Exit(0);
             }
         }
