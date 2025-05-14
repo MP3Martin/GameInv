@@ -6,6 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <SelfContained>true</SelfContained>
+        <ApplicationIcon>Resources\favicon.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
@@ -27,5 +28,4 @@
     <ItemGroup>
         <None Remove="NLog.config"/>
     </ItemGroup>
-
 </Project>
