@@ -2,7 +2,7 @@ using Fleck;
 
 namespace GameInv.Ws {
     public class WebSocketConnectionInterfaceWrapper {
-        private const string AuthenticatedString = "authenticated";
+        private const string AuthenticatedString = "Authenticated";
         private readonly IWebSocketConnection _socketConnection;
 
         public WebSocketConnectionInterfaceWrapper(IWebSocketConnection socketConnection) {

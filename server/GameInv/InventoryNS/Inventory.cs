@@ -147,7 +147,11 @@ namespace GameInv.InventoryNS {
         }
 
         public bool RemoveItem(string id, bool noLog = false) {
-            return RemoveItem(_items[GetItemIndex(id)], noLog);
+            var index = GetItemIndex(id);
+            // ReSharper disable once ConvertIfStatementToReturnStatement
+            if (index == -1) return false;
+
+            return RemoveItem(_items[index], noLog);
         }
 
         public bool ModifyItem(Item item) {

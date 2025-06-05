@@ -97,18 +97,24 @@ namespace GameInv.Ws {
             Log.Info($"Socket {socket.ConnectionInfo.Id} failed auth");
         }
 
-        private void SendItems(WebSocketConnectionInterfaceWrapper socket) {
+        private void SendItems(WebSocketConnectionInterfaceWrapper? socket) {
             var items = _gameInv.Inventory.ToList();
             var itemsData = items.Select(i => (ItemData)i);
             var serializedItems = JsonConvert.SerializeObject(itemsData);
             var message = EncodeMessage("items", null, serializedItems);
-            socket.Send(message);
+
+            if (socket is not null) {
+                socket.Send(message);
+                return;
+            }
+
+            foreach (var sock in _allSockets.Values) {
+                sock.Send(message);
+            }
         }
 
         private void SendItems() {
-            foreach (var socket in _allSockets.Values) {
-                SendItems(socket);
-            }
+            SendItems(null);
         }
     }
 }
