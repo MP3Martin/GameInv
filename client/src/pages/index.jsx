@@ -1,3 +1,5 @@
+import { Link } from '@nextui-org/link';
+
 import DefaultLayout from '@/layouts/default';
 import { WebSocket } from '@/components/WebSocket';
 import ItemGrid from '@/components/item/ItemGrid';
@@ -27,7 +29,16 @@ export default function IndexPage () {
             <ItemGrid />
           </>
           : <>
-            <div className={'text-xl sm:text-4xl md:text-6xl w-full text-center'}>Not connected</div>
+            <div className={'flex flex-col items-center'}>
+              <p className={'text-4xl md:text-6xl mb-1'}>
+                Not connected
+              </p>
+              <p className={'text-xl'}>
+                Please download the GameInv server&nbsp;
+                <Link isExternal className={'text-[100%]'}
+                      href={'https://github.com/MP3Martin/GameInv#console--web-ui'}>here</Link>
+              </p>
+            </div>
           </>}
 
       </DefaultLayout>
