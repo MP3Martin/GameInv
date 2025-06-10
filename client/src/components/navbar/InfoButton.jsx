@@ -26,22 +26,23 @@ export default function InfoButton ({ tooltipPlacement = 'bottom' }) {
               [
                 ['[OTHER]', 'https://github.com/MP3Martin/GameInv/blob/main/client/package.json'],
                 ['Soumya Ranjan Padhy - useScreenSize', 'https://dev.to/soumyarian/usescreensize-a-custom-react-hook-for-dynamic-screen-size-detection-5e59'],
-                ['@tabler/icons-react'],
-                ['@nextui-org/react'],
-                ['next'],
-                ['react'],
-                ['zustand'],
-                ['immer'],
-                ['framer-motion'],
-                ['javascript-color-gradient'],
-                ['styled-components'],
-                ['js-base64']
+                '@tabler/icons-react',
+                '@nextui-org/react',
+                'next',
+                'react',
+                'zustand',
+                'immer',
+                'framer-motion',
+                'javascript-color-gradient',
+                'styled-components',
+                'react-use-websocket',
+                'js-base64'
               ].map((item) => (
-                <li key={item[0]}>
+                <li key={Array.isArray(item) ? item[0] : item}>
                   <Link
                     isExternal className={'text-medium'}
-                    href={item[1] ?? 'https://www.npmjs.com/package/' + item[0]}>
-                    {item[0]}
+                    href={Array.isArray(item) ? item[1] : 'https://www.npmjs.com/package/' + item}>
+                    {Array.isArray(item) ? item[0] : item}
                   </Link>
                 </li>
               ))
