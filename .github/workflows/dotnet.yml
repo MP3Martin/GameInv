@@ -25,17 +25,21 @@ jobs:
         with:
           dotnet-version: 9
 
-      - name: Publish Linux
+      - name: Publish Linux x64
         run: |
-          dotnet publish GameInv -p:PublishProfile=FolderProfile-Linux.pubxml
+          dotnet publish GameInv -p:PublishProfile=FolderProfile-Linux-x64.pubxml
 
-      - name: Publish Windows
+      - name: Publish Linux arm64
         run: |
-          dotnet publish GameInv -p:PublishProfile=FolderProfile-Windows.pubxml
+          dotnet publish GameInv -p:PublishProfile=FolderProfile-Linux-arm64.pubxml
 
-      - name: Publish Windows WPF
+      - name: Publish Windows x64
         run: |
-          dotnet publish GameInv-WPF -p:PublishProfile=FolderProfile-Windows.pubxml
+          dotnet publish GameInv -p:PublishProfile=FolderProfile-Windows-x64.pubxml
+
+      - name: Publish Windows WPF x64
+        run: |
+          dotnet publish GameInv-WPF -p:PublishProfile=FolderProfile-Windows-x64.pubxml
 
       - name: Rename And Move Assets
         run: |
@@ -43,6 +47,7 @@ jobs:
           mkdir release_files
           
           mv GameInv/bin/publish/linux-x64/GameInv release_files/GameInv-${{ github.ref_name }}-Linux-x64
+          mv GameInv/bin/publish/linux-arm64/GameInv release_files/GameInv-${{ github.ref_name }}-Linux-arm64
           mv GameInv/bin/publish/win-x64/GameInv.exe release_files/GameInv-${{ github.ref_name }}-Windows-x64.exe
           mv GameInv-WPF/bin/publish/win-x64/GameInv-WPF.exe release_files/GameInv-WPF-${{ github.ref_name }}-Windows-x64.exe
 
