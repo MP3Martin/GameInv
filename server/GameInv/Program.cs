@@ -23,7 +23,6 @@ namespace GameInv {
                     "Use console UI",
                     true
                 );
-            ClearAll();
 
             CheckDbConnectionString(ErrorPresenter);
 
@@ -39,6 +38,7 @@ namespace GameInv {
                     Environment.Exit(1);
                 }
             } else /* Console UI */ {
+                ClearAll();
                 Log.LogLevel = LogLevel.Fatal; // Disable logging
 
                 var gameInv = new GameInv(ErrorPresenter);
