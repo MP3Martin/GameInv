@@ -35,7 +35,7 @@
         "javascript-color-gradient": "^2.5.0",
         "js-base64": "^3.7.7",
         "lodash.merge": "^4.6.2",
-        "next": "15.4.8",
+        "next": "15.4.9",
         "next-themes": "^0.3.0",
         "react": "^18.3.1",
         "react-custom-events": "^1.1.1",
